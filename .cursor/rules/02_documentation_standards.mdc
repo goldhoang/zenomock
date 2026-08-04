@@ -1,0 +1,27 @@
+---
+description: Documentation organization, hybrid language policy, and anti-scattering standards.
+globs: **/docs/**/*,**/tests/**/*
+---
+
+# PROJECT ENGINEERING - DOCUMENTATION & TESTING STANDARDS
+
+## 0. SOURCE OF TRUTH
+- Stack and Tri-Mode laws are defined in `/docs/architecture/` and `/docs/roadmap/`.
+- Each major topic should be self-contained: a reader can understand context and practice from that file without jumping across many scattered files.
+
+## 1. HYBRID LANGUAGE POLICY
+- **Vietnamese:** Deep-dive docs, architectural "WHY", learning rationales. Keep technical terms in English.
+- **English:** Lightweight READMEs, API contracts, deploy checklists, brief component descriptions.
+
+## 2. DIRECTORY STRUCTURE
+- All documentation lives under `/docs/` (e.g. `/docs/api`, `/docs/architecture`, `/docs/deploy`, `/docs/features`, `/docs/roadmap`).
+- **README Rule:** Every subfolder MUST contain a `README.md` index — compact map of files, not implementation dumps.
+- **Feature Folder Rule:** New feature docs go in `/docs/features/<name>/` with one design file (e.g. `boundary-design.md`) plus optional setup files. Never fragment into one file per operation.
+- **No Loose Files:** No loose `.md` in project root or source trees except the main repository `README.md`.
+- **HTTP / API collections:** Store under `/tests/http/`, isolated from conceptual markdown docs.
+
+## 3. STRUCTURAL STANDARDS
+- **One authoritative file per major topic** — prefer consolidated over fragmented.
+- **Lazy-loading:** When needing context, read `/docs/README.md` or a subfolder index first, then ONLY the relevant file.
+- **Diff-friendly updates:** Append or patch sections; do not rewrite entire docs for small API additions.
+- Tables and Mermaid/ASCII diagrams are encouraged for Tri-Mode and endpoint comparisons.

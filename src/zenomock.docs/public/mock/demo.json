@@ -1,0 +1,6 @@
+{
+  "message": "ZenoMock showroom fallback",
+  "hint": "Run ghcr.io/goldhoang/zenomock:latest on port 8080 for Hybrid Mode",
+  "modules": ["boundary", "schema", "chaos"],
+  "phase": "foundation"
+}

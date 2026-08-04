@@ -1,0 +1,2 @@
+# Placeholder so local `dotnet run` does not warn about a missing WebRoot.
+# Mode 1 Docker image copies the Vite build into this folder at image build time.
