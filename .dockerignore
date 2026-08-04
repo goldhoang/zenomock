@@ -1,0 +1,17 @@
+.git
+.github
+.cursor
+.vs
+.vscode
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+docs/
+tests/
+*.md
+LICENSE
+.gitignore
+.dockerignore
+**/*.user
+**/*.suo

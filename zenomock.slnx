@@ -1,1 +1,7 @@
-<Solution />
+<Solution>
+  <Project Path="src/ZenoMock.Api/ZenoMock.Api.csproj" />
+  <Project Path="src/zenomock.docs/zenomock.docs.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>

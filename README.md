@@ -4,8 +4,8 @@
 
 > **A containerized, zero-cost, local-first mock engine combining instant CRUD API generation, boundary edge-case data, and chaos engineering for resilient frontend & QA testing.**
 
-[![Docker Image](https://img.shields.io/badge/Docker-GHCR-blue?logo=docker)](https://github.com/your-username/zenomock/pkgs/container/zenomock)
-[![Live Playground](https://img.shields.io/badge/Live-Playground-brightgreen?logo=github)](https://your-username.github.io/zenomock)
+[![Docker Image](https://img.shields.io/badge/Docker-GHCR-blue?logo=docker)](https://github.com/goldhoang/zenomock/pkgs/container/zenomock)
+[![Live Playground](https://img.shields.io/badge/Live-Playground-brightgreen?logo=github)](https://goldhoang.github.io/zenomock/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 </div>
@@ -14,22 +14,22 @@
 
 ## 🚀 Quick Start (Zero-Install Local Engine)
 
-Run the local engine in seconds using Docker:
-
 ```bash
-docker run -p 8080:8080 ghcr.io/your-username/zenomock:latest
+docker run -p 8080:8080 ghcr.io/goldhoang/zenomock:latest
 ```
-- Open your browser at http://localhost:8080 for Full Offline Mode, or visit the Online Playground Dashboard.
+
+- Engine UI + API: http://localhost:8080  
+- Health: http://localhost:8080/health  
+- Online playground: https://goldhoang.github.io/zenomock/
+
+> **Note:** GitHub Pages must use **Source = GitHub Actions**. If the site still shows this README as HTML, switch Pages source away from “Deploy from a branch”.
 
 ## 💡 Why ZenoMock?
 
-- 🔒 100% Privacy & Local-First: No backend schema or sensitive business rules are sent to third-party SaaS platforms.
-
-- 💥 Chaos Engineering Built-in: Inject simulated latency, random HTTP 500/502 errors, and corrupted JSON payloads directly into your dev workflow.
-
-- 🧪 Boundary & QA Data Generator: Get instant nightmare test data (Zalgo strings, XSS payloads, CSS overflow texts, mismatched types).
-
-- 🌐 Tri-Mode Hybrid Architecture: Smooth fallback from cloud static demo to local Docker engine.
+- 🔒 **Local-first privacy** — schemas stay on your machine / container.
+- 💥 **Chaos-ready** *(phased)* — latency, 5xx, corrupted JSON.
+- 🧪 **Boundary data** *(phased)* — Zalgo, XSS samples, overflow, fuzz JSON.
+- 🌐 **Tri-Mode** — Full Offline · Showroom (Pages) · Hybrid (Pages UI + local `:8080`).
 
 ## 🏗 Tri-Mode Operational Architecture
 
@@ -40,32 +40,44 @@ docker run -p 8080:8080 ghcr.io/your-username/zenomock:latest
          ▼                                                   ▼
 [ GitHub Pages CDN ]                               [ http://localhost:8080 ]
 (Cloud Hosted Showroom)                            (Local Docker Container)
-         │                                                  │                                                     
-   Ping localhost:8080                                      ▼
+         │                                                  │
+   Ping localhost:8080/health                               ▼
          │                                          MODE 1: FULL OFFLINE
-   ┌─────┴─────┐                                  (UI & API served directly
-   ▼           ▼                                      from Docker Container)
+   ┌─────┴─────┐                                  (UI & API from container)
+   ▼           ▼
 [ ALIVE ]   [ DEAD ]
    │           │
    ▼           ▼
 MODE 3:     MODE 2:
 HYBRID      SHOWROOM DEMO
-ONLINE      (Static Mock Data)
 ```
 
-| Mode | Environment | UI Source | API Backend Target | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| **MODE 1: Full Offline** | `http://localhost:8080` | Local Container | `.NET 10 API` | Full-stack app running 100% inside local Docker container. |
-| **MODE 2: Showroom Demo** | `github.io CDN` | GitHub Pages | Static `.json` Mock | Static web demo using fallback data when local engine is offline. |
-| **MODE 3: Hybrid Online** | `github.io CDN` | GitHub Pages | `http://localhost:8080` | Hosted CDN frontend auto-pings and connects to local Docker API. |
+| Mode | Environment | UI Source | API Target |
+| :--- | :--- | :--- | :--- |
+| **1 Full Offline** | `localhost:8080` | Container `wwwroot` | Same-origin .NET API |
+| **2 Showroom** | `github.io/zenomock` | GitHub Pages | Static `mock/*.json` |
+| **3 Hybrid** | Pages + Docker | GitHub Pages | `http://localhost:8080` (CORS) |
 
-## 🛠 Tech Stack & Infrastructure
+## 🛠 Tech Stack
 
-- Backend: .NET 10 Minimal API, C#
+- **Backend:** .NET 10 Minimal API (Endpoints + Extensions)
+- **Frontend:** React, TypeScript, Vite
+- **DevOps:** GitHub Actions, multi-stage Docker, GHCR, GitHub Pages
 
-- Frontend: React, TypeScript, Vite, Tailwind CSS
+## 📚 Documentation
 
-- DevOps: GitHub Actions, Docker Multi-Stage Build, GitHub Container Registry (GHCR), GitHub Pages
+Start here: [`docs/README.md`](./docs/README.md)
+
+| Doc | Purpose |
+| :--- | :--- |
+| [`docs/roadmap/mvp-and-phases.md`](./docs/roadmap/mvp-and-phases.md) | MVP scope & phases |
+| [`docs/architecture/tri-mode-architecture.md`](./docs/architecture/tri-mode-architecture.md) | Runtime model |
+| [`docs/api/API_SPECIFICATION.md`](./docs/api/API_SPECIFICATION.md) | HTTP contracts |
+| [`docs/deploy/ghcr-and-pages.md`](./docs/deploy/ghcr-and-pages.md) | Deploy & smoke |
+
+## 🧭 Current status
+
+**Phase 0 — Foundation** is in progress on branch workflows: health, CORS, SPA host, playground shell, docs, CI. Feature modules (Boundary → Schema → Chaos) follow the roadmap.
 
 ---
 
@@ -73,10 +85,8 @@ ONLINE      (Static Mock Data)
 
 ## License & Author
 
-ZenoMock
-
 Built and maintained by **[Tran Huy Hoang](https://github.com/goldhoang)**
 
-[Pages](https://goldhoang.github.io/zenomock) · [Repository](https://github.com/goldhoang/zenomock) · [MIT License](./LICENSE.txt)
+[Pages](https://goldhoang.github.io/zenomock/) · [Repository](https://github.com/goldhoang/zenomock) · [MIT License](./LICENSE)
 
 </div>

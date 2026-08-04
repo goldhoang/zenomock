@@ -1,25 +1,41 @@
-# Stage 1: Build Frontend React UI
+# Multi-stage: React playground → .NET 10 publish → single runtime image (Mode 1).
+# Pages builds use VITE_BASE=/zenomock/; this image must use VITE_BASE=/.
+
+# Stage 1: Frontend
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 COPY src/zenomock.docs/package*.json ./
-RUN npm install
+RUN npm ci
 COPY src/zenomock.docs/ .
+ENV VITE_BASE=/
 RUN npm run build
 
-# Stage 2: Build Backend .NET 10 API
+# Stage 2: Backend
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend-builder
 WORKDIR /src
-COPY src/ZenoMock.Api/ .
-RUN dotnet publish -c Release -o /app/publish
+COPY src/ZenoMock.Api/ZenoMock.Api.csproj src/ZenoMock.Api/
+RUN dotnet restore src/ZenoMock.Api/ZenoMock.Api.csproj
+COPY src/ZenoMock.Api/ src/ZenoMock.Api/
+RUN dotnet publish src/ZenoMock.Api/ZenoMock.Api.csproj \
+    -c Release \
+    -o /app/publish \
+    --no-restore \
+    --no-self-contained
 
-# Stage 3: Final Runtime Image
+# Stage 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
+
+ENV ASPNETCORE_URLS=http://+:8080 \
+    ASPNETCORE_ENVIRONMENT=Production
+
 EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
+
+LABEL org.opencontainers.image.source="https://github.com/goldhoang/zenomock" \
+      org.opencontainers.image.title="zenomock" \
+      org.opencontainers.image.description="ZenoMock local-first mock engine (.NET 10 + React)"
 
 COPY --from=backend-builder /app/publish .
-# Copy kết quả build React vào wwwroot của .NET
 COPY --from=frontend-builder /app/dist ./wwwroot
 
 ENTRYPOINT ["dotnet", "ZenoMock.Api.dll"]

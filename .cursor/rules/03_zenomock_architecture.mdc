@@ -1,0 +1,59 @@
+---
+description: ZenoMock Tri-Mode architecture, Minimal API extension layout, CORS, SPA, and module boundaries.
+globs: **/*.{cs,csproj,tsx,ts,json},Dockerfile,**/vite.config.ts
+---
+
+# ZENOMOCK - ARCHITECTURE & EXECUTION LAWS
+
+## 0. PRODUCT SCOPE
+- ZenoMock is a **local-first mock engine**: CRUD schema mock + boundary data + chaos (phased).
+- Distribution: **$0 infra** — GitHub Pages (showroom UI) + GHCR (single Docker image).
+- Follow `/docs/roadmap/mvp-and-phases.md`. Do NOT implement Phase 5 chaos-proxy without explicit ask.
+
+## 1. TRI-MODE LAWS (NON-NEGOTIABLE)
+| Mode | UI | API |
+| :--- | :--- | :--- |
+| 1 Full Offline | Served from container `wwwroot` | Same origin `.NET` API |
+| 2 Showroom | GitHub Pages CDN | Static JSON under `public/mock/` |
+| 3 Hybrid | GitHub Pages CDN | `http://localhost:8080` (CORS) |
+
+- **Canonical local engine port:** `8080` (Docker + Hybrid probe).
+- **Health probe:** `GET /health` every ~5s from the frontend when on Pages or local UI.
+- **Vite `base`:** `/zenomock/` for Pages builds; `/` for Docker/local engine builds (`VITE_BASE`).
+- Never break graceful degradation: when local engine is down, UI must fall back to Showroom (no blank page).
+
+## 2. BACKEND STRUCTURE (Minimal API)
+- Use **Minimal APIs**, not Controllers.
+- Keep `Program.cs` thin: register services + call extension methods only.
+- Group by concern under:
+  - `Extensions/` — CORS, SPA/static, OpenAPI, service registration
+  - `Endpoints/` — `Map*Endpoints` per module (`Health`, later `Boundary`, `Schema`, `Chaos`)
+- In-memory state only for MVP (no EF Core / no external DB unless explicitly requested).
+- JSON responses: **camelCase**.
+- Do not enable HTTPS redirection for the HTTP-only container profile.
+
+## 3. CORS
+- Whitelist origins via `Cors:AllowedOrigins` (Pages + Vite dev).
+- Never use `AllowAnyOrigin` for the Hybrid Mode path.
+- Default allowlist must include `https://goldhoang.github.io` and local Vite origin.
+
+## 4. FRONTEND STRUCTURE
+- React + TypeScript + Vite under `src/zenomock.docs/`.
+- API access goes through a small client (`src/lib/`) that:
+  1. Probes local `/health`
+  2. Routes to local API or static mock fallback
+- Feature UI panels may be placeholders until their backend module exists.
+
+## 5. DEVOPS GUARDRAILS
+- Single multi-stage `Dockerfile`: FE build → .NET publish → runtime with `wwwroot`.
+- GHCR image: `ghcr.io/goldhoang/zenomock`.
+- Pages workflow builds with `VITE_BASE=/zenomock/`.
+- Docker build uses `VITE_BASE=/`.
+- Extend existing workflows; do not invent a second packaging path.
+
+## 6. MODULE ORDER (WHEN ADDING FEATURES)
+1. Health / foundation (done in Phase 0)
+2. Boundary endpoints
+3. Schema CRUD (in-memory)
+4. Chaos on `/api/*` (latency / errors / corrupt JSON)
+5. Chaos reverse-proxy — **last**, allowlist-only (SSRF risk)

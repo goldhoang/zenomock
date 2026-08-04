@@ -1,121 +1,94 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useEffect, useState } from 'react'
+import { DockerCopyCommand } from './components/DockerCopyCommand'
+import { EnvironmentBanner } from './components/EnvironmentBanner'
+import { PanelPlaceholder } from './components/PanelPlaceholder'
+import { HEALTH_POLL_MS, resolveEngineStatus, type EngineStatus } from './lib/api'
 import './App.css'
 
+const initialStatus: EngineStatus = {
+  mode: 'checking',
+  health: null,
+  apiBaseUrl: null,
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [status, setStatus] = useState<EngineStatus>(initialStatus)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    const tick = async () => {
+      const next = await resolveEngineStatus(controller.signal)
+      if (!controller.signal.aborted) {
+        setStatus(next)
+      }
+    }
+
+    void tick()
+    const id = window.setInterval(() => void tick(), HEALTH_POLL_MS)
+    return () => {
+      controller.abort()
+      window.clearInterval(id)
+    }
+  }, [])
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      <EnvironmentBanner mode={status.mode} health={status.health} />
+
+      <header className="hero">
+        <p className="hero__eyebrow">Local-first mock engine</p>
+        <h1 className="hero__brand">ZenoMock</h1>
+        <p className="hero__lead">
+          Containerized CRUD mocks, boundary data, and chaos — zero-cost via GHCR
+          and GitHub Pages.
+        </p>
+        <div className="hero__actions">
+          <a
+            className="btn btn--primary"
+            href="https://github.com/goldhoang/zenomock"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Repository
+          </a>
+          <DockerCopyCommand />
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+      </header>
+
+      <section className="panels" aria-label="Roadmap modules">
+        <PanelPlaceholder
+          phase="Phase 2"
+          status="coming-soon"
+          title="Boundary Data Explorer"
+          description="Zalgo, XSS samples, overflow strings, and fuzzed JSON with one-click copy."
+        />
+        <PanelPlaceholder
+          phase="Phase 3"
+          status="coming-soon"
+          title="Schema & API Playground"
+          description="Define a JSON Schema and exercise in-memory mock CRUD after Boundary."
+        />
+        <PanelPlaceholder
+          phase="Phase 4"
+          status="coming-soon"
+          title="Chaos Control Panel"
+          description="Latency, 5xx rates, and corrupted JSON injection against /api/* — not /health."
+        />
       </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <footer className="footer">
+        <span>
+          Mode:{' '}
+          {status.mode === 'local'
+            ? 'Hybrid / Local'
+            : status.mode === 'showroom'
+              ? 'Showroom'
+              : 'Detecting'}
+        </span>
+        <a href="https://goldhoang.github.io/zenomock/">Playground</a>
+      </footer>
+    </div>
   )
 }
 

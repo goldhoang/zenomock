@@ -1,23 +1,27 @@
+using System.Text.Json.Serialization;
+using ZenoMock.Api.Endpoints;
+using ZenoMock.Api.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+});
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddZenoMockCors(builder.Configuration, builder.Environment);
+builder.Services.AddZenoMockOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseZenoMockOpenApi();
+app.UseCors(CorsExtensions.PolicyName);
+app.UseZenoMockStaticFiles();
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapHealthEndpoints();
+app.MapZenoMockSpaFallback();
 
 app.Run();
+
+public partial class Program;
