@@ -4,6 +4,7 @@
 
 | Item | Value |
 | :--- | :--- |
+| Product name | **ZenoMock** (*Zero Network Mock Engine*) |
 | Local engine port | **8080** |
 | Health | `GET /health` |
 | API style | Minimal API + `Extensions/` + `Endpoints/` |

@@ -33,7 +33,7 @@ EXPOSE 8080
 
 LABEL org.opencontainers.image.source="https://github.com/goldhoang/zenomock" \
       org.opencontainers.image.title="zenomock" \
-      org.opencontainers.image.description="ZenoMock local-first mock engine (.NET 10 + React)"
+      org.opencontainers.image.description="ZenoMock — Zero Network Mock Engine (.NET 10 + React)"
 
 COPY --from=backend-builder /app/publish .
 COPY --from=frontend-builder /app/dist ./wwwroot

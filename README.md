@@ -2,6 +2,8 @@
 
 # ⚡ ZenoMock
 
+### Zero Network Mock Engine
+
 ### by [GoldHoang](https://goldhoang.dev)
 
 > **A containerized, zero-cost, local-first mock engine combining instant CRUD API generation, boundary edge-case data, and chaos engineering for resilient frontend & QA testing.**
@@ -85,8 +87,8 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phases 0–5 complete** + **Wave A UI/UX polish**.  
-Security notes for local-first deploy: [`SECURITY.md`](./SECURITY.md). Next optional wave: hardening CI — [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
+**v0.1 archive slice:** Phases 0–5 + Wave A UI polish.  
+See [`SECURITY.md`](./SECURITY.md) and optional backlog in [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
 
 ---
 
