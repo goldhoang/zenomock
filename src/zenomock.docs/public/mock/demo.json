@@ -1,5 +1,5 @@
 {
-  "phase": "chaos-control",
+  "phase": "chaos-proxy",
   "message": "ZenoMock showroom catalog",
   "hint": "Run ghcr.io/goldhoang/zenomock:latest on port 8080 for Hybrid Mode",
   "routes": [
@@ -31,6 +31,12 @@
       "path": "/api/v1/chaos/config",
       "title": "Chaos config",
       "phase": 4,
+      "live": true
+    },
+    {
+      "path": "/api/v1/proxy/config",
+      "title": "Proxy config",
+      "phase": 5,
       "live": true
     }
   ]

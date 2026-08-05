@@ -78,18 +78,26 @@ public sealed class ChaosMiddleware(RequestDelegate next)
 
     private static bool ShouldApply(string path)
     {
-        if (!path.StartsWith("/api/", StringComparison.OrdinalIgnoreCase))
+        // Local API surface.
+        if (path.StartsWith("/api/", StringComparison.OrdinalIgnoreCase))
         {
-            return false;
+            // Keep chaos + proxy config reachable.
+            if (path.StartsWith("/api/v1/chaos", StringComparison.OrdinalIgnoreCase)
+                || path.StartsWith("/api/v1/proxy", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        // Keep chaos controls and diagnostics reachable.
-        if (path.StartsWith("/api/v1/chaos", StringComparison.OrdinalIgnoreCase))
+        // Allowlisted upstream forwards (Phase 5).
+        if (path.StartsWith("/proxy", StringComparison.OrdinalIgnoreCase))
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private static bool IsJsonContentType(string? contentType) =>

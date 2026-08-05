@@ -15,6 +15,8 @@ Central knowledge base for the ZenoMock monorepo (local-first mock engine + GitH
 | [`/guides`](./guides/) | How-to end-to-end (Vietnamese deep-dive) |
 | [`/features`](./features/) | Per-module design docs (filled as features land) |
 
+Post–Phase 5 polish backlog: [`roadmap/future-upgrades.md`](./roadmap/future-upgrades.md).
+
 ---
 
 > **Law:** Do not scatter notes at this root. Put specs inside the matching subfolder. Start with [`roadmap/mvp-and-phases.md`](./roadmap/mvp-and-phases.md) before implementing features.

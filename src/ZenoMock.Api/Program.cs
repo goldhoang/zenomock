@@ -14,6 +14,7 @@ builder.Services.AddZenoMockCors(builder.Configuration, builder.Environment);
 builder.Services.AddZenoMockOpenApi();
 builder.Services.AddZenoMockSchemaStore();
 builder.Services.AddZenoMockChaos();
+builder.Services.AddZenoMockProxy(builder.Configuration);
 
 var app = builder.Build();
 
@@ -26,6 +27,7 @@ app.MapHealthEndpoints();
 app.MapBoundaryEndpoints();
 app.MapSchemaEndpoints();
 app.MapChaosEndpoints();
+app.MapProxyEndpoints();
 app.MapZenoMockSpaFallback();
 
 app.Run();

@@ -71,6 +71,8 @@ Start here: [`docs/README.md`](./docs/README.md)
 | Doc | Purpose |
 | :--- | :--- |
 | [`docs/roadmap/mvp-and-phases.md`](./docs/roadmap/mvp-and-phases.md) | MVP scope & phases |
+| [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md) | Post-MVP polish & upgrades |
+| [`docs/guides/using-zenomock.md`](./docs/guides/using-zenomock.md) | How to use (Vietnamese) |
 | [`docs/architecture/tri-mode-architecture.md`](./docs/architecture/tri-mode-architecture.md) | Runtime model |
 | [`docs/api/API_SPECIFICATION.md`](./docs/api/API_SPECIFICATION.md) | HTTP contracts |
 | [`docs/deploy/ghcr-and-pages.md`](./docs/deploy/ghcr-and-pages.md) | Deploy & GHCR |
@@ -78,7 +80,7 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phase 4 — Chaos:** latency / 500 / corrupt JSON on `/api/*` + Control Panel. Optional next: **Phase 5 chaos proxy** (allowlist only).
+**Phase 5 — Chaos proxy:** allowlisted `/proxy/{**path}` + SSRF guards. Next: **UI/UX polish** — see [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
 
 ---
 
