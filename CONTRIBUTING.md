@@ -1,16 +1,15 @@
 # Contributing
 
-Thanks for interest in **ZenoMock** by [GoldHoang](https://goldhoang.dev).
+Thanks for interest in **ZenoMock** (*Zero Network Mock Engine*) by [GoldHoang](https://goldhoang.dev).
 
 ## Branches
 
 | Branch | Role |
 | :--- | :--- |
 | `main` | Default / release (GitHub Pages + GHCR) |
-| `dev` | Integration (optional CI push target) |
 | `feat/*`, `fix/*`, `chore/*`, `docs/*`, `test/*` | Work branches |
 
-Prefer **PRs into `main`** (or `dev` then `main`). There is no `master` branch.
+Open **PRs into `main`**. There is no `master` branch.
 
 ## Local checks
 

@@ -18,8 +18,7 @@ export function SiteFooter({ modeLabel }: Props) {
             GoldHoang
           </a>
           <p className="site-footer__tagline">
-            Local-first tooling · Tri-Mode mock engine · Built for developers who
-            ship under pressure.
+            ZenoMock — Zero Network Mock Engine · Tri-Mode · Local-first.
           </p>
         </div>
 

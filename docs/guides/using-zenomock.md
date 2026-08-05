@@ -11,7 +11,7 @@ Dự án của **[GoldHoang](https://goldhoang.dev)** — playground: https://go
 
 ## 1. ZenoMock là gì (trong 1 phút)
 
-ZenoMock là **mock engine local-first** + playground UI do GoldHoang thiết kế để học Tri-Mode, boundary testing, mock CRUD và chaos — chạy $0 trên GHCR + GitHub Pages.
+ZenoMock (**Zero Network Mock Engine**) là **mock engine local-first** + playground UI do GoldHoang thiết kế để học Tri-Mode, boundary testing, mock CRUD và chaos — chạy $0 trên GHCR + GitHub Pages.
 
 | Bạn cần | ZenoMock giúp |
 | :--- | :--- |

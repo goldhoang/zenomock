@@ -8,9 +8,10 @@ globs: **/*.{cs,csproj,tsx,ts,json},Dockerfile,**/vite.config.ts
 These rules are **stable**. Delivery order and “what shipped” live only in `/docs/roadmap/` — never track phase progress inside `.cursor/rules`.
 
 ## 0. PRODUCT SCOPE
-- ZenoMock is a **local-first mock engine**: CRUD schema mock + boundary data + chaos (phased in docs).
+- ZenoMock (**Zero Network Mock Engine**) is a **local-first mock engine**: CRUD schema mock + boundary data + chaos + allowlisted proxy.
 - Distribution: **$0 infra** — GitHub Pages (showroom UI) + GHCR (single Docker image).
 - Follow `/docs/roadmap/mvp-and-phases.md` for sequencing. Do **not** implement an open reverse-proxy chaos path without an explicit ask (SSRF risk).
+- Default git branch is **`main`** (PRs target `main` only).
 
 ## 1. TRI-MODE LAWS (NON-NEGOTIABLE)
 | Mode | UI | API |

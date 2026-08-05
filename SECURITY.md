@@ -1,6 +1,6 @@
 # Security Policy
 
-ZenoMock is a **local-first learning / portfolio mock engine**, not a multi-tenant SaaS.
+ZenoMock (*Zero Network Mock Engine*) is a **local-first learning / portfolio mock engine**, not a multi-tenant SaaS.
 
 ## Supported versions
 

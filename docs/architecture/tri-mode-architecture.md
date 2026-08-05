@@ -2,7 +2,7 @@
 
 ## Intent
 
-ZenoMock must work **offline in Docker**, **as a zero-install showroom on GitHub Pages**, and **hybrid** (CDN UI + local engine) without forcing users through a paid cloud mock.
+ZenoMock (**Zero Network Mock Engine**) must work **offline in Docker**, **as a zero-install showroom on GitHub Pages**, and **hybrid** (CDN UI + local engine) without forcing users through a paid cloud mock.
 
 Author: [GoldHoang](https://goldhoang.dev).
 
