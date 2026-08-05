@@ -78,7 +78,7 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phase 2 — Boundary:** live generators + Explorer (copy JSON / cURL). Next: **Phase 3 Schema CRUD**.
+**Phase 3 — Schema CRUD:** in-memory schema registry + mock list/create/get + Playground. UI polish (Syne/DM Sans, motion). Next: **Phase 4 Chaos**.
 
 ---
 

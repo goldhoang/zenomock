@@ -62,16 +62,35 @@ Design notes: [`../features/boundary/boundary-design.md`](../features/boundary/b
 
 ---
 
-## Schema & mock CRUD — **Planned (Phase 3)**
+## Schema & mock CRUD — **Done (Phase 3)**
 
 | Method | Path | Notes |
 | :--- | :--- | :--- |
-| `POST` | `/api/v1/schemas` | Register entity JSON Schema |
-| `GET` | `/api/v1/mock/{entity}` | List generated/stored records |
-| `POST` | `/api/v1/mock/{entity}` | Create record (in-memory) |
+| `GET` | `/api/v1/schemas` | List registered entities |
+| `POST` | `/api/v1/schemas` | Register/replace entity JSON Schema + optional `seedCount` |
+| `GET` | `/api/v1/mock/{entity}` | List records |
+| `POST` | `/api/v1/mock/{entity}` | Create record (auto `id`, in-memory) |
 | `GET` | `/api/v1/mock/{entity}/{id}` | Get by id |
 
-Storage: process memory only for MVP. Limits TBD in feature design.
+### Register body
+
+```json
+{
+  "entity": "products",
+  "seedCount": 3,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "price": { "type": "number" },
+      "active": { "type": "boolean" }
+    }
+  }
+}
+```
+
+Limits: 20 entities · 200 records/entity · seed 0–50 · body ≤ 64KB · entity `^[a-z][a-z0-9_-]{0,63}$`.  
+Storage: process memory only. Design: [`../features/schema/schema-design.md`](../features/schema/schema-design.md).
 
 ---
 

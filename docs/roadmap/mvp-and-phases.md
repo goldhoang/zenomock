@@ -52,7 +52,7 @@ After Phases 0–3 (minimum viable product):
 - **DoD:** All three modes demonstrable with health + static demo data
 - **Playground card:** none (banner / mode detection + catalog only)
 
-### Phase 2 — Boundary module *(this branch)*
+### Phase 2 — Boundary module *(done)*
 
 - `GET /api/v1/boundary/strings/zalgo`
 - `GET /api/v1/boundary/strings/xss-payloads`
@@ -63,14 +63,15 @@ After Phases 0–3 (minimum viable product):
 - **Playground card:** 1st — *Boundary Data Explorer* (`ready`)
 - Design: [`../features/boundary/boundary-design.md`](../features/boundary/boundary-design.md)
 
-### Phase 3 — Schema CRUD (happy path)
+### Phase 3 — Schema CRUD (happy path) *(this branch)*
 
-- `POST /api/v1/schemas`
+- `GET|POST /api/v1/schemas`
 - `GET|POST /api/v1/mock/{entity}`, `GET /api/v1/mock/{entity}/{id}`
 - In-memory store with sensible limits (count / payload size)
 - Schema Playground UI (edit + test call)
 - **DoD:** Create schema → list/create records without restart (process memory)
-- **Playground card:** 2nd — *Schema & API Playground*
+- **Playground card:** 2nd — *Schema & API Playground* (`ready`)
+- Design: [`../features/schema/schema-design.md`](../features/schema/schema-design.md)
 
 ### Phase 4 — Chaos (local API only)
 

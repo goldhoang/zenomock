@@ -3,6 +3,7 @@ import { DockerCopyCommand } from './components/DockerCopyCommand'
 import { EnvironmentBanner } from './components/EnvironmentBanner'
 import { ModeCatalog } from './components/ModeCatalog'
 import { PanelPlaceholder } from './components/PanelPlaceholder'
+import { SchemaPlayground } from './components/SchemaPlayground'
 import type { EngineMode } from './lib/config'
 import { useEngineStatus } from './lib/useEngineStatus'
 import './App.css'
@@ -25,13 +26,15 @@ function App() {
 
   return (
     <div className="app">
-      <EnvironmentBanner
-        mode={status.mode}
-        health={status.health}
-        displayTarget={status.displayTarget}
-      />
+      <div className="reveal">
+        <EnvironmentBanner
+          mode={status.mode}
+          health={status.health}
+          displayTarget={status.displayTarget}
+        />
+      </div>
 
-      <header className="hero">
+      <header className="hero reveal reveal--delay-1">
         <p className="hero__eyebrow">Local-first mock engine</p>
         <h1 className="hero__brand">ZenoMock</h1>
         <p className="hero__lead">
@@ -51,11 +54,19 @@ function App() {
         </div>
       </header>
 
-      <ModeCatalog status={status} />
+      <div className="reveal reveal--delay-2">
+        <ModeCatalog status={status} />
+      </div>
 
-      <BoundaryExplorer status={status} />
+      <div className="reveal reveal--delay-3">
+        <BoundaryExplorer status={status} />
+      </div>
 
-      <section className="panels" aria-label="Roadmap modules">
+      <div className="reveal reveal--delay-4">
+        <SchemaPlayground status={status} />
+      </div>
+
+      <section className="panels reveal reveal--delay-4" aria-label="Roadmap modules">
         <PanelPlaceholder
           phase="Phase 2"
           status="ready"
@@ -65,9 +76,10 @@ function App() {
         />
         <PanelPlaceholder
           phase="Phase 3"
-          status="coming-soon"
+          status="ready"
+          href="#schema-playground"
           title="Schema & API Playground"
-          description="Define a JSON Schema and exercise in-memory mock CRUD after Boundary."
+          description="Register a JSON Schema, seed records, then list / create / fetch by id in memory."
         />
         <PanelPlaceholder
           phase="Phase 4"
