@@ -20,3 +20,5 @@ Post–Phase 5 polish backlog: [`roadmap/future-upgrades.md`](./roadmap/future-u
 ---
 
 > **Law:** Do not scatter notes at this root. Put specs inside the matching subfolder. Start with [`roadmap/mvp-and-phases.md`](./roadmap/mvp-and-phases.md) before implementing features.
+
+**Author:** [GoldHoang](https://goldhoang.dev) · Live: [goldhoang.github.io/zenomock](https://goldhoang.github.io/zenomock/)

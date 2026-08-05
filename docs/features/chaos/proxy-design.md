@@ -56,6 +56,19 @@ Response headers on success: `X-ZenoMock-Proxy: 1`, `X-ZenoMock-Upstream: {path}
 
 `ChaosProxyPanel` (`#chaos-proxy`): shows config, path input, Probe. Combine with Chaos Control Panel Apply.
 
+## Runtime configuration (Docker / production)
+
+`appsettings.json` is baked into the image. Override without editing files:
+
+```bash
+docker run -p 8080:8080 \
+  -e Proxy__UpstreamBaseUrl=https://staging.example.com \
+  -e Proxy__AllowedHosts__0=staging.example.com \
+  ghcr.io/goldhoang/zenomock:latest
+```
+
+Vietnamese deep-dive (theory + SSRF + workflows): [`../../guides/chaos-and-proxy-deep-dive.md`](../../guides/chaos-and-proxy-deep-dive.md).
+
 ## Verification
 
 See `tests/http/proxy.http`. Dev self-loop:

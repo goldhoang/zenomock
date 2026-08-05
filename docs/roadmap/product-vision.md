@@ -8,6 +8,7 @@
 | Field | Value |
 | :--- | :--- |
 | **Name** | ZenoMock |
+| **Author** | [GoldHoang](https://goldhoang.dev) (Tran Huy Hoang) |
 | **Repository** | [`goldhoang/zenomock`](https://github.com/goldhoang/zenomock) |
 | **Tagline** | A containerized, zero-cost, local-first mock engine combining instant CRUD API generation, boundary edge-case data, and chaos engineering for resilient frontend & QA testing. |
 | **Distribution** | Open-source monorepo — **$0 infrastructure** (GitHub Pages + GHCR) |

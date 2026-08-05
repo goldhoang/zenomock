@@ -2,10 +2,13 @@
 
 # ⚡ ZenoMock
 
+### by [GoldHoang](https://goldhoang.dev)
+
 > **A containerized, zero-cost, local-first mock engine combining instant CRUD API generation, boundary edge-case data, and chaos engineering for resilient frontend & QA testing.**
 
 [![Docker Image](https://img.shields.io/badge/Docker-GHCR-blue?logo=docker)](https://github.com/goldhoang/zenomock/pkgs/container/zenomock)
 [![Live Playground](https://img.shields.io/badge/Live-Playground-brightgreen?logo=github)](https://goldhoang.github.io/zenomock/)
+[![Author](https://img.shields.io/badge/Author-GoldHoang-3de0d0)](https://goldhoang.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 </div>
@@ -27,8 +30,9 @@ docker run -p 8080:8080 ghcr.io/goldhoang/zenomock:latest
 ## 💡 Why ZenoMock?
 
 - 🔒 **Local-first privacy** — schemas stay on your machine / container.
-- 💥 **Chaos-ready** *(phased)* — latency, 5xx, corrupted JSON.
-- 🧪 **Boundary data** *(phased)* — Zalgo, XSS samples, overflow, fuzz JSON.
+- 💥 **Chaos-ready** — latency, 5xx, corrupted JSON on `/api/*` and `/proxy/*`.
+- 🧪 **Boundary data** — Zalgo, XSS samples, overflow, fuzz JSON.
+- 🔀 **Allowlisted proxy** — forward to staging/httpbin with SSRF guards.
 - 🌐 **Tri-Mode** — Full Offline · Showroom (Pages) · Hybrid (Pages UI + local `:8080`).
 
 ## 🏗 Tri-Mode Operational Architecture
@@ -61,7 +65,7 @@ HYBRID      SHOWROOM DEMO
 ## 🛠 Tech Stack
 
 - **Backend:** .NET 10 Minimal API (Endpoints + Extensions)
-- **Frontend:** React, TypeScript, Vite
+- **Frontend:** React, TypeScript, Vite, highlight.js
 - **DevOps:** GitHub Actions, multi-stage Docker, GHCR, GitHub Pages
 
 ## 📚 Documentation
@@ -70,9 +74,10 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 | Doc | Purpose |
 | :--- | :--- |
+| [`docs/guides/using-zenomock.md`](./docs/guides/using-zenomock.md) | How to use (Vietnamese) |
+| [`docs/guides/chaos-and-proxy-deep-dive.md`](./docs/guides/chaos-and-proxy-deep-dive.md) | Chaos + Proxy theory (Vietnamese) |
 | [`docs/roadmap/mvp-and-phases.md`](./docs/roadmap/mvp-and-phases.md) | MVP scope & phases |
 | [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md) | Post-MVP polish & upgrades |
-| [`docs/guides/using-zenomock.md`](./docs/guides/using-zenomock.md) | How to use (Vietnamese) |
 | [`docs/architecture/tri-mode-architecture.md`](./docs/architecture/tri-mode-architecture.md) | Runtime model |
 | [`docs/api/API_SPECIFICATION.md`](./docs/api/API_SPECIFICATION.md) | HTTP contracts |
 | [`docs/deploy/ghcr-and-pages.md`](./docs/deploy/ghcr-and-pages.md) | Deploy & GHCR |
@@ -80,16 +85,17 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phase 5 — Chaos proxy:** allowlisted `/proxy/{**path}` + SSRF guards. Next: **UI/UX polish** — see [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
+**Phases 0–5 complete** (foundation → boundary → schema → chaos → allowlisted proxy).  
+**Wave A UI/UX polish** ships sticky nav, JSON highlighting, and author footer — see [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
 
 ---
 
 <div align="center">
 
-## License & Author
+## Author & License
 
-Built and maintained by **[Tran Huy Hoang](https://github.com/goldhoang)**
+**ZenoMock** is designed and maintained by **[GoldHoang](https://goldhoang.dev)** (Tran Huy Hoang).
 
-[Pages](https://goldhoang.github.io/zenomock/) · [Repository](https://github.com/goldhoang/zenomock) · [MIT License](./LICENSE)
+[goldhoang.dev](https://goldhoang.dev) · [GitHub @goldhoang](https://github.com/goldhoang) · [Pages](https://goldhoang.github.io/zenomock/) · [MIT License](./LICENSE)
 
 </div>

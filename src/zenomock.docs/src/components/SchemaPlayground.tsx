@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { getJson, postJson, type EngineStatus } from '../lib/api'
+import { CodeBlock } from './CodeBlock'
 
 type Props = {
   status: EngineStatus
@@ -166,7 +167,7 @@ export function SchemaPlayground({ status }: Props) {
     })
 
   return (
-    <section id="schema-playground" className="explorer playground">
+    <section id="schema-playground" className="explorer playground section-anchor">
       <div className="explorer__head">
         <h2 className="explorer__title">Schema & API Playground</h2>
         <span className="explorer__source">
@@ -290,7 +291,7 @@ export function SchemaPlayground({ status }: Props) {
           </p>
         ) : null}
         {output ? (
-          <pre className="explorer__preview">{JSON.stringify(output, null, 2)}</pre>
+          <CodeBlock code={JSON.stringify(output, null, 2)} meta="response" />
         ) : (
           <p className="explorer__muted">
             Results appear here after Register / List / Create / Fetch.

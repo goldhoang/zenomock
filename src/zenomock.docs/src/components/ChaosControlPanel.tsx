@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getJson, postJson, type EngineStatus } from '../lib/api'
 import { LOCAL_API_URL } from '../lib/config'
+import { CodeBlock } from './CodeBlock'
 
 type Props = {
   status: EngineStatus
@@ -175,7 +176,7 @@ export function ChaosControlPanel({ status }: Props) {
   }
 
   return (
-    <section id="chaos-control" className="explorer playground">
+    <section id="chaos-control" className="explorer playground section-anchor">
       <div className="explorer__head">
         <h2 className="explorer__title">Chaos Control Panel</h2>
         <span className="explorer__source">
@@ -295,7 +296,12 @@ export function ChaosControlPanel({ status }: Props) {
             {error}
           </p>
         ) : null}
-        {probe ? <pre className="explorer__preview">{probe}</pre> : null}
+        {probe ? (
+          <CodeBlock
+            code={probe}
+            meta={probe.includes('·') ? probe.split('·').slice(0, 2).join(' · ').trim() : 'probe'}
+          />
+        ) : null}
         {!notice && !error && !probe ? (
           <p className="explorer__muted">
             Apply config, then Probe to see latency / 500 / corrupt responses.

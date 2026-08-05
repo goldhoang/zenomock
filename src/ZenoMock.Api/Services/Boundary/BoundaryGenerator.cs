@@ -136,7 +136,6 @@ public static class BoundaryGenerator
             return;
         }
 
-        // Drop one field when possible.
         if (keys.Count > 1 && rng.NextDouble() < 0.7)
         {
             var drop = keys[rng.Next(keys.Count)];

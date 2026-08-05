@@ -32,6 +32,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.75rem;
 }
 
 html,
@@ -42,36 +43,88 @@ body,
 }
 
 body {
+  position: relative;
   min-width: 320px;
   overflow-x: hidden;
   background: var(--bg);
 }
 
+/* Base depth — mostly dark, soft neon washes */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: -2;
+  z-index: -3;
   background:
-    radial-gradient(ellipse 55% 40% at 12% 0%, rgba(61, 224, 208, 0.2), transparent 58%),
-    radial-gradient(ellipse 45% 35% at 88% 8%, rgba(196, 91, 255, 0.1), transparent 55%),
-    radial-gradient(ellipse 40% 30% at 50% 100%, rgba(61, 224, 208, 0.08), transparent 60%),
-    linear-gradient(180deg, #071018 0%, #060a10 45%, #05080d 100%);
+    radial-gradient(ellipse 50% 38% at 8% -5%, rgba(61, 224, 208, 0.22), transparent 55%),
+    radial-gradient(ellipse 42% 32% at 92% 5%, rgba(196, 91, 255, 0.12), transparent 52%),
+    radial-gradient(ellipse 55% 28% at 50% 42%, rgba(61, 224, 208, 0.05), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 70% 88%, rgba(196, 91, 255, 0.07), transparent 65%),
+    radial-gradient(ellipse 45% 28% at 15% 95%, rgba(61, 224, 208, 0.09), transparent 60%),
+    linear-gradient(180deg, #071018 0%, #060a10 40%, #050910 72%, #04070c 100%);
 }
 
+/* Tech grid — denser near hero, fades mid-page */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: -1;
-  opacity: 0.22;
+  z-index: -2;
+  opacity: 0.28;
   background-image:
-    linear-gradient(rgba(61, 224, 208, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(61, 224, 208, 0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 90% 70% at 50% 15%, #000 15%, transparent 78%);
+    linear-gradient(rgba(61, 224, 208, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 224, 208, 0.055) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image:
+    linear-gradient(180deg, #000 0%, #000 18%, transparent 42%, transparent 58%, #000 88%, transparent 100%),
+    radial-gradient(ellipse 80% 50% at 50% 0%, #000 20%, transparent 75%);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(180deg, #000 0%, #000 18%, transparent 42%, transparent 58%, #000 88%, transparent 100%),
+    radial-gradient(ellipse 80% 50% at 50% 0%, #000 20%, transparent 75%);
+  -webkit-mask-composite: source-in;
+}
+
+/* Floating neon orbs — subtle motion, professional */
+#root::before {
+  content: "";
+  position: fixed;
+  width: min(42vw, 420px);
+  height: min(42vw, 420px);
+  top: 12%;
+  right: -8%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(61, 224, 208, 0.14), transparent 68%);
+  filter: blur(2px);
+  animation: orb-drift 18s ease-in-out infinite alternate;
+}
+
+#root::after {
+  content: "";
+  position: fixed;
+  width: min(36vw, 360px);
+  height: min(36vw, 360px);
+  bottom: 8%;
+  left: -10%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(196, 91, 255, 0.1), transparent 70%);
+  filter: blur(4px);
+  animation: orb-drift 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes orb-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-3%, 4%) scale(1.06);
+  }
 }
 
 a {

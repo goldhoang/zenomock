@@ -62,9 +62,6 @@ public sealed class ProxyTargetBuilder(IOptions<ProxyOptions> options)
             return false;
         }
 
-        // Non-loopback private/link-local literals require explicit allowlist (already checked)
-        // but remain documented SSRF surface — prefer hostnames in production.
-
         var relative = NormalizeRemnant(remnantPath);
         if (relative.StartsWith("proxy/", StringComparison.OrdinalIgnoreCase)
             || relative.Equals("proxy", StringComparison.OrdinalIgnoreCase))

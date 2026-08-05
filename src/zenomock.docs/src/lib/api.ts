@@ -226,10 +226,7 @@ async function fetchStaticJson<T>(path: string, signal?: AbortSignal): Promise<T
   }
 }
 
-/**
- * GET JSON: engine first when reachable, then Showroom static fallback.
- * Future feature panels should call this instead of raw `fetch`.
- */
+/** GET JSON: engine first when reachable, then Showroom static fallback. */
 export async function getJson<T>(
   path: string,
   options?: { signal?: AbortSignal; status?: EngineStatus },

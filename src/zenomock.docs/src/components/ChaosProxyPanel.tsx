@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { getJson, type EngineStatus } from '../lib/api'
 import { LOCAL_API_URL } from '../lib/config'
+import { CodeBlock } from './CodeBlock'
 
 type Props = {
   status: EngineStatus
@@ -82,7 +83,7 @@ export function ChaosProxyPanel({ status }: Props) {
   }
 
   return (
-    <section id="chaos-proxy" className="explorer playground">
+    <section id="chaos-proxy" className="explorer playground section-anchor">
       <div className="explorer__head">
         <h2 className="explorer__title">Chaos Proxy</h2>
         <span className="explorer__source">
@@ -154,7 +155,12 @@ export function ChaosProxyPanel({ status }: Props) {
             {error}
           </p>
         ) : null}
-        {probe ? <pre className="explorer__preview">{probe}</pre> : null}
+        {probe ? (
+          <CodeBlock
+            code={probe}
+            meta={probe.includes('·') ? probe.split('·').slice(0, 2).join(' · ').trim() : 'proxy'}
+          />
+        ) : null}
         {!notice && !error && !probe ? (
           <p className="explorer__muted">
             Probe forwards to UpstreamBaseUrl + path. Denied hosts return HTTP 403.
