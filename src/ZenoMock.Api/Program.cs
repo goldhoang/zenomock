@@ -20,6 +20,7 @@ app.UseCors(CorsExtensions.PolicyName);
 app.UseZenoMockStaticFiles();
 
 app.MapHealthEndpoints();
+app.MapBoundaryEndpoints();
 app.MapZenoMockSpaFallback();
 
 app.Run();

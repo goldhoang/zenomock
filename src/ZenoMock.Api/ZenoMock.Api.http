@@ -1,4 +1,11 @@
-@GET http://localhost:8080/health
+### Health
+GET http://localhost:8080/health
+Accept: application/json
+
+###
+
+### Boundary — Zalgo
+GET http://localhost:8080/api/v1/boundary/strings/zalgo?count=2
 Accept: application/json
 
 ###

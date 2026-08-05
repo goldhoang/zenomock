@@ -1,5 +1,5 @@
 {
-  "phase": "mode-glue",
+  "phase": "boundary",
   "message": "ZenoMock showroom catalog",
   "hint": "Run ghcr.io/goldhoang/zenomock:latest on port 8080 for Hybrid Mode",
   "routes": [
@@ -7,19 +7,19 @@
       "path": "/api/v1/boundary/strings/zalgo",
       "title": "Boundary · Zalgo",
       "phase": 2,
-      "live": false
+      "live": true
     },
     {
       "path": "/api/v1/boundary/strings/xss-payloads",
       "title": "Boundary · XSS payloads",
       "phase": 2,
-      "live": false
+      "live": true
     },
     {
       "path": "/api/v1/boundary/strings/overflow",
       "title": "Boundary · Overflow",
       "phase": 2,
-      "live": false
+      "live": true
     },
     {
       "path": "/api/v1/schemas",

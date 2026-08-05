@@ -154,6 +154,30 @@ async function fetchEngineJson<T>(
   }
 }
 
+async function fetchEnginePostJson<T>(
+  apiBaseUrl: string,
+  path: string,
+  body: unknown,
+  signal?: AbortSignal,
+): Promise<T | null> {
+  const url = `${apiBaseUrl.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      signal,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    return await readJson<T>(response)
+  } catch {
+    return null
+  }
+}
+
 async function fetchStaticJson<T>(path: string, signal?: AbortSignal): Promise<T | null> {
   const url = resolveStaticMockUrl(path)
   if (!url) {
@@ -194,4 +218,30 @@ export async function getJson<T>(
   }
 
   throw new Error(`No engine response or static mock for ${path}`)
+}
+
+/**
+ * POST JSON to the local engine when reachable.
+ * Callers should provide a Showroom fallback (e.g. client-side fuzz) when this throws.
+ */
+export async function postJson<T>(
+  path: string,
+  body: unknown,
+  options?: { signal?: AbortSignal; status?: EngineStatus },
+): Promise<ApiResult<T>> {
+  const status = options?.status ?? (await resolveEngineStatus(options?.signal))
+
+  if ((status.mode === 'offline' || status.mode === 'hybrid') && status.apiBaseUrl) {
+    const engineData = await fetchEnginePostJson<T>(
+      status.apiBaseUrl,
+      path,
+      body,
+      options?.signal,
+    )
+    if (engineData !== null) {
+      return { data: engineData, source: 'engine' }
+    }
+  }
+
+  throw new Error(`Engine unavailable for POST ${path}`)
 }

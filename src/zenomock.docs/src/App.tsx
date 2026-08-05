@@ -1,3 +1,4 @@
+import { BoundaryExplorer } from './components/BoundaryExplorer'
 import { DockerCopyCommand } from './components/DockerCopyCommand'
 import { EnvironmentBanner } from './components/EnvironmentBanner'
 import { ModeCatalog } from './components/ModeCatalog'
@@ -52,10 +53,13 @@ function App() {
 
       <ModeCatalog status={status} />
 
+      <BoundaryExplorer status={status} />
+
       <section className="panels" aria-label="Roadmap modules">
         <PanelPlaceholder
           phase="Phase 2"
-          status="coming-soon"
+          status="ready"
+          href="#boundary-explorer"
           title="Boundary Data Explorer"
           description="Zalgo, XSS samples, overflow strings, and fuzzed JSON with one-click copy."
         />

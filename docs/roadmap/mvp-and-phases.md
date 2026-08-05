@@ -44,7 +44,7 @@ After Phases 0–3 (minimum viable product):
 - **DoD:** Local `dotnet run` / Docker serve UI + health; Pages build uses `/zenomock/`; Hybrid CORS allowlist ready
 - **Playground card:** none (infrastructure only)
 
-### Phase 1 — Mode glue *(this branch)*
+### Phase 1 — Mode glue *(done)*
 
 - Harden `apiClient` routing (Mode 1 same-origin · Mode 3 CORS probe · Mode 2 static fallback)
 - Expand `public/mock/` samples for Showroom (+ catalog preview UI)
@@ -52,7 +52,7 @@ After Phases 0–3 (minimum viable product):
 - **DoD:** All three modes demonstrable with health + static demo data
 - **Playground card:** none (banner / mode detection + catalog only)
 
-### Phase 2 — Boundary module
+### Phase 2 — Boundary module *(this branch)*
 
 - `GET /api/v1/boundary/strings/zalgo`
 - `GET /api/v1/boundary/strings/xss-payloads`
@@ -60,7 +60,8 @@ After Phases 0–3 (minimum viable product):
 - `POST /api/v1/boundary/fuzz-json`
 - Boundary Explorer UI (copy JSON / cURL)
 - **DoD:** Documented endpoints + UI copy actions
-- **Playground card:** 1st — *Boundary Data Explorer*
+- **Playground card:** 1st — *Boundary Data Explorer* (`ready`)
+- Design: [`../features/boundary/boundary-design.md`](../features/boundary/boundary-design.md)
 
 ### Phase 3 — Schema CRUD (happy path)
 

@@ -49,7 +49,8 @@ zenomock/
   - `AddZenoMockOpenApi`
   - `UseZenoMockStaticFiles` / `MapZenoMockSpaFallback`
   - `MapHealthEndpoints`
-- Future modules add `MapBoundaryEndpoints`, `MapSchemaEndpoints`, `MapChaosEndpoints`.
+- Mapped modules today: `MapHealthEndpoints`, `MapBoundaryEndpoints`.
+- Later: `MapSchemaEndpoints`, `MapChaosEndpoints`.
 
 ## Frontend composition rules
 
