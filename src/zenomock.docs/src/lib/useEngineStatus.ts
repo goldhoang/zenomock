@@ -16,9 +16,20 @@ export function useEngineStatus(): EngineStatus {
 
     const tick = async () => {
       const next = await resolveEngineStatus(controller.signal)
-      if (!controller.signal.aborted) {
-        setStatus(next)
+      if (controller.signal.aborted) {
+        return
       }
+      setStatus((prev) => {
+        if (
+          prev.mode === next.mode &&
+          prev.apiBaseUrl === next.apiBaseUrl &&
+          prev.displayTarget === next.displayTarget &&
+          JSON.stringify(prev.health) === JSON.stringify(next.health)
+        ) {
+          return prev
+        }
+        return next
+      })
     }
 
     void tick()

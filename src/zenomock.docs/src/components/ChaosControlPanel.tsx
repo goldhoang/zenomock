@@ -12,17 +12,32 @@ type ChaosConfig = {
   corruptedJsonRate: number
 }
 
+const ZERO: ChaosConfig = {
+  latencyMs: 0,
+  error500Rate: 0,
+  corruptedJsonRate: 0,
+}
+
+function sameConfig(a: ChaosConfig, b: ChaosConfig) {
+  return (
+    a.latencyMs === b.latencyMs &&
+    a.error500Rate === b.error500Rate &&
+    a.corruptedJsonRate === b.corruptedJsonRate
+  )
+}
+
 export function ChaosControlPanel({ status }: Props) {
   const engineReady =
     status.mode === 'offline' || status.mode === 'hybrid'
-  const [latencyMs, setLatencyMs] = useState(0)
-  const [error500Rate, setError500Rate] = useState(0)
-  const [corruptedJsonRate, setCorruptedJsonRate] = useState(0)
+  const [draft, setDraft] = useState<ChaosConfig>(ZERO)
+  const [applied, setApplied] = useState<ChaosConfig>(ZERO)
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [probe, setProbe] = useState<string | null>(null)
   const resultRef = useRef<HTMLDivElement>(null)
+
+  const dirty = !sameConfig(draft, applied)
 
   const loadConfig = async () => {
     if (!engineReady) {
@@ -30,9 +45,13 @@ export function ChaosControlPanel({ status }: Props) {
     }
     try {
       const result = await getJson<ChaosConfig>('/api/v1/chaos/config', { status })
-      setLatencyMs(result.data.latencyMs ?? 0)
-      setError500Rate(result.data.error500Rate ?? 0)
-      setCorruptedJsonRate(result.data.corruptedJsonRate ?? 0)
+      const next: ChaosConfig = {
+        latencyMs: result.data.latencyMs ?? 0,
+        error500Rate: result.data.error500Rate ?? 0,
+        corruptedJsonRate: result.data.corruptedJsonRate ?? 0,
+      }
+      setDraft(next)
+      setApplied(next)
     } catch {
       /* keep local slider state */
     }
@@ -59,22 +78,21 @@ export function ChaosControlPanel({ status }: Props) {
     setBusy(true)
     setError(null)
     try {
-      const body: ChaosConfig = {
-        latencyMs,
-        error500Rate,
-        corruptedJsonRate,
-      }
       const result = await postJson<ChaosConfig & { message?: string }>(
         '/api/v1/chaos/config',
-        body,
+        draft,
         { status },
       )
-      setLatencyMs(result.data.latencyMs)
-      setError500Rate(result.data.error500Rate)
-      setCorruptedJsonRate(result.data.corruptedJsonRate)
+      const next: ChaosConfig = {
+        latencyMs: result.data.latencyMs,
+        error500Rate: result.data.error500Rate,
+        corruptedJsonRate: result.data.corruptedJsonRate,
+      }
+      setDraft(next)
+      setApplied(next)
       setNotice(
         result.data.message ??
-          `Applied · latency ${result.data.latencyMs}ms · 500 ${(result.data.error500Rate * 100).toFixed(0)}% · corrupt ${(result.data.corruptedJsonRate * 100).toFixed(0)}%`,
+          `Applied · latency ${next.latencyMs}ms · 500 ${(next.error500Rate * 100).toFixed(0)}% · corrupt ${(next.corruptedJsonRate * 100).toFixed(0)}%`,
       )
       reveal()
     } catch (err) {
@@ -94,11 +112,19 @@ export function ChaosControlPanel({ status }: Props) {
     }
     setBusy(true)
     try {
-      await postJson('/api/v1/chaos/reset', {}, { status })
-      setLatencyMs(0)
-      setError500Rate(0)
-      setCorruptedJsonRate(0)
-      setNotice('Chaos reset to defaults (all zero)')
+      const result = await postJson<ChaosConfig & { message?: string }>(
+        '/api/v1/chaos/reset',
+        {},
+        { status },
+      )
+      const next: ChaosConfig = {
+        latencyMs: result.data.latencyMs ?? 0,
+        error500Rate: result.data.error500Rate ?? 0,
+        corruptedJsonRate: result.data.corruptedJsonRate ?? 0,
+      }
+      setDraft(next)
+      setApplied(next)
+      setNotice(result.data.message ?? 'Chaos reset to defaults (all zero)')
       setProbe(null)
       setError(null)
       reveal()
@@ -117,10 +143,17 @@ export function ChaosControlPanel({ status }: Props) {
       return
     }
 
+    if (dirty) {
+      setError('Sliders changed — click Apply config before Probe')
+      setNotice(null)
+      reveal()
+      return
+    }
+
     setBusy(true)
     setError(null)
-    const started = performance.now()
     try {
+      const started = performance.now()
       const response = await fetch(
         `${status.apiBaseUrl}/api/v1/boundary/strings/xss-payloads`,
         { headers: { Accept: 'application/json' } },
@@ -146,7 +179,7 @@ export function ChaosControlPanel({ status }: Props) {
       <div className="explorer__head">
         <h2 className="explorer__title">Chaos Control Panel</h2>
         <span className="explorer__source">
-          {engineReady ? 'via engine' : 'engine required'}
+          {engineReady ? (dirty ? 'unsaved' : 'via engine') : 'engine required'}
         </span>
       </div>
       <p className="explorer__lead">
@@ -163,46 +196,59 @@ export function ChaosControlPanel({ status }: Props) {
 
       <label className="chaos__slider">
         <span>
-          Latency <strong>{latencyMs} ms</strong>
+          Latency <strong>{draft.latencyMs} ms</strong>
         </span>
         <input
           type="range"
           min={0}
           max={5000}
           step={50}
-          value={latencyMs}
+          value={draft.latencyMs}
           disabled={!engineReady || busy}
-          onChange={(e) => setLatencyMs(Number(e.target.value))}
+          onChange={(e) =>
+            setDraft((prev) => ({ ...prev, latencyMs: Number(e.target.value) }))
+          }
         />
       </label>
 
       <label className="chaos__slider">
         <span>
-          Error 500 rate <strong>{(error500Rate * 100).toFixed(0)}%</strong>
+          Error 500 rate <strong>{(draft.error500Rate * 100).toFixed(0)}%</strong>
         </span>
         <input
           type="range"
           min={0}
           max={100}
           step={5}
-          value={Math.round(error500Rate * 100)}
+          value={Math.round(draft.error500Rate * 100)}
           disabled={!engineReady || busy}
-          onChange={(e) => setError500Rate(Number(e.target.value) / 100)}
+          onChange={(e) =>
+            setDraft((prev) => ({
+              ...prev,
+              error500Rate: Number(e.target.value) / 100,
+            }))
+          }
         />
       </label>
 
       <label className="chaos__slider">
         <span>
-          Corrupted JSON rate <strong>{(corruptedJsonRate * 100).toFixed(0)}%</strong>
+          Corrupted JSON rate{' '}
+          <strong>{(draft.corruptedJsonRate * 100).toFixed(0)}%</strong>
         </span>
         <input
           type="range"
           min={0}
           max={100}
           step={5}
-          value={Math.round(corruptedJsonRate * 100)}
+          value={Math.round(draft.corruptedJsonRate * 100)}
           disabled={!engineReady || busy}
-          onChange={(e) => setCorruptedJsonRate(Number(e.target.value) / 100)}
+          onChange={(e) =>
+            setDraft((prev) => ({
+              ...prev,
+              corruptedJsonRate: Number(e.target.value) / 100,
+            }))
+          }
         />
       </label>
 
@@ -210,7 +256,7 @@ export function ChaosControlPanel({ status }: Props) {
         <button
           type="button"
           className="btn btn--primary"
-          disabled={busy || !engineReady}
+          disabled={busy || !engineReady || !dirty}
           onClick={() => void apply()}
         >
           {busy ? 'Working…' : 'Apply config'}
@@ -234,8 +280,8 @@ export function ChaosControlPanel({ status }: Props) {
       </div>
 
       <p className="explorer__muted">
-        Tip: raise 500 rate to ~40%, Apply, then Probe a few times. Defaults live on{' '}
-        {status.apiBaseUrl ?? LOCAL_API_URL}.
+        Tip: move sliders → <strong>Apply config</strong> → Probe. 0% never / 100% always.
+        At 100% 500, corrupt never runs. Engine: {status.apiBaseUrl ?? LOCAL_API_URL}.
       </p>
 
       <div className="playground__result" ref={resultRef}>

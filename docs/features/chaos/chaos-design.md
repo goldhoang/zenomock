@@ -36,12 +36,14 @@ Implementation: `Middleware/ChaosMiddleware.cs` + `Services/Chaos/ChaosConfigSto
 2. **Skips** `/api/v1/chaos/*` so controls stay reachable.
 3. Does **not** run for `/health` or static SPA files.
 4. Order per request: delay → optional short-circuit `500` → otherwise call next → optional JSON corruption on 2xx JSON bodies.
+5. Rates snap to whole percents; **0% never**, **100% always** (`ChaosChance`). Mid values use `Next(100) < percent`.
+6. Injected `500` short-circuits — corrupt JSON is not evaluated on that request.
 
 Corruption strategies (random): truncated payload, swapped quotes, missing braces.
 
 ## Playground
 
-`ChaosControlPanel` (`#chaos-control`): sliders, Apply, Probe (`GET /api/v1/boundary/strings/xss-payloads`), Reset, toast feedback.
+`ChaosControlPanel` (`#chaos-control`): sliders (draft) → **Apply config** (persist to engine) → Probe / Reset. Unsaved slider changes block Probe until Apply.
 
 Showroom can preview config JSON statically but **cannot** inject live chaos without the engine.
 

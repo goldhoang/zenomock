@@ -21,7 +21,8 @@ public sealed class ChaosMiddleware(RequestDelegate next)
             await Task.Delay(config.LatencyMs, context.RequestAborted);
         }
 
-        if (config.Error500Rate > 0 && Random.Shared.NextDouble() < config.Error500Rate)
+        // 500 short-circuits the pipeline — corrupt JSON never runs on that request.
+        if (ChaosChance.ShouldInject(config.Error500Percent))
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             context.Response.ContentType = "application/json";
@@ -34,7 +35,7 @@ public sealed class ChaosMiddleware(RequestDelegate next)
             return;
         }
 
-        if (config.CorruptedJsonRate <= 0)
+        if (!ChaosChance.ShouldInject(config.CorruptedJsonPercent))
         {
             await next(context);
             return;
@@ -51,8 +52,7 @@ public sealed class ChaosMiddleware(RequestDelegate next)
             buffer.Seek(0, SeekOrigin.Begin);
             var shouldCorrupt =
                 context.Response.StatusCode is >= 200 and < 300
-                && IsJsonContentType(context.Response.ContentType)
-                && Random.Shared.NextDouble() < config.CorruptedJsonRate;
+                && IsJsonContentType(context.Response.ContentType);
 
             if (!shouldCorrupt)
             {
@@ -67,7 +67,7 @@ public sealed class ChaosMiddleware(RequestDelegate next)
 
             context.Response.Body = originalBody;
             context.Response.Headers.Remove("Content-Length");
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = "application/json; charset=utf-8";
             await context.Response.WriteAsync(corrupted, context.RequestAborted);
         }
         finally

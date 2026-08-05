@@ -11,3 +11,5 @@ Per-module design docs are added when implementation starts. Follow phase order 
 Until a folder exists, treat [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md) as the contract stub.
 
 Tri-Mode client (not a feature module): `src/zenomock.docs/src/lib/api.ts`. Smoke: [`../deploy/tri-mode-smoke.md`](../deploy/tri-mode-smoke.md).
+
+**How to use (scenarios):** [`../guides/using-zenomock.md`](../guides/using-zenomock.md).
