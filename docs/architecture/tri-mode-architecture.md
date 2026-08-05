@@ -47,15 +47,20 @@ zenomock/
 - `Program.cs` wires DI and calls:
   - `AddZenoMockCors`
   - `AddZenoMockOpenApi`
+  - `UseZenoMockStaticFiles` / `MapZenoMockSpaFallback`
   - `MapHealthEndpoints`
-  - `MapZenoMockSpa` (static files + fallback)
 - Future modules add `MapBoundaryEndpoints`, `MapSchemaEndpoints`, `MapChaosEndpoints`.
 
 ## Frontend composition rules
 
 - `VITE_BASE=/zenomock/` on Pages; `VITE_BASE=/` inside Docker.
 - `VITE_LOCAL_API_URL` defaults to `http://localhost:8080`.
-- Environment banner polls `/health`; on failure, load `/mock/*.json` (respecting Vite `base`).
+- All JSON reads go through `src/zenomock.docs/src/lib/api.ts` (`resolveEngineStatus` + `getJson`):
+  1. **Mode 1:** UI hosted on port `8080` (not `github.io`) → same-origin `/health` and API (works for `localhost` and `127.0.0.1`).
+  2. **Mode 3:** Pages/Vite → probe `VITE_LOCAL_API_URL/health` (timeout ~1.5s, CORS).
+  3. **Mode 2:** probe fails → static files via `mockRoutes.ts` + Vite `base`.
+- `getJson(path)` tries the engine first when reachable, then falls back to the static map (graceful degradation per request).
+- Banner polls every ~5s; UI must never go blank when the engine disappears.
 
 ## CORS (Mode 3)
 

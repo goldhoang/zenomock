@@ -3,7 +3,7 @@
 Base URL (local engine): `http://localhost:8080`  
 JSON: **camelCase**
 
-Status legend: **Done** (Phase 0+) · **Planned** (later phases)
+Status legend: **Done** (Phase 0+) · **Showroom static** (Phase 1 fallback) · **Planned** (later phases)
 
 ---
 
@@ -72,7 +72,16 @@ Middleware applies to `/api/*` only (exclude `/health` and static files).
 
 ## Static showroom fallback (frontend, not API)
 
-When the engine is offline, the Pages app reads files under Vite `base` + `mock/`, e.g.:
+When the engine is offline (or a live route is not implemented yet), `getJson` reads files under Vite `base` + path in `mockRoutes.ts`.
 
-- `/zenomock/mock/health.json`
-- `/zenomock/mock/demo.json`
+| Logical path | Static file |
+| :--- | :--- |
+| `/health` | `mock/health.json` |
+| `/mock-catalog` | `mock/demo.json` |
+| `/api/v1/boundary/strings/zalgo` | `mock/boundary/zalgo.json` |
+| `/api/v1/boundary/strings/xss-payloads` | `mock/boundary/xss-payloads.json` |
+| `/api/v1/boundary/strings/overflow` | `mock/boundary/overflow.json` |
+| `/api/v1/schemas` | `mock/schema/catalog.json` |
+| `/api/v1/chaos/config` | `mock/chaos/config.json` |
+
+On GitHub Pages these resolve under `/zenomock/mock/…`. Payloads are **previews** until the matching phase ships a live generator.

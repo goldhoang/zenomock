@@ -1,0 +1,6 @@
+{
+  "source": "showroom-static",
+  "endpoint": "GET /api/v1/schemas",
+  "note": "Preview only — in-memory schema registry ships in Phase 3",
+  "schemas": []
+}

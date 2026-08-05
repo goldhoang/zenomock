@@ -35,7 +35,7 @@ After Phases 0–3 (minimum viable product):
 > **UI rule:** Playground feature cards MUST render in ascending phase order
 > (**Phase 2 → 3 → 4**). Flip card `status` from `coming-soon` → `ready` when that module ships (ready cards get hover border + click target).
 
-### Phase 0 — Foundation *(this branch)*
+### Phase 0 — Foundation *(done)*
 
 - Cursor rules, `/docs` layout, corrected product vision
 - Minimal API host: CORS, static SPA, `/health`, thin `Program.cs`
@@ -44,13 +44,13 @@ After Phases 0–3 (minimum viable product):
 - **DoD:** Local `dotnet run` / Docker serve UI + health; Pages build uses `/zenomock/`; Hybrid CORS allowlist ready
 - **Playground card:** none (infrastructure only)
 
-### Phase 1 — Mode glue
+### Phase 1 — Mode glue *(this branch)*
 
-- Harden `apiClient` routing (local vs static)
-- Expand `public/mock/` samples for Showroom
-- Document smoke matrix: Docker only / Pages only / Pages+Docker
+- Harden `apiClient` routing (Mode 1 same-origin · Mode 3 CORS probe · Mode 2 static fallback)
+- Expand `public/mock/` samples for Showroom (+ catalog preview UI)
+- Document smoke matrix: [`../deploy/tri-mode-smoke.md`](../deploy/tri-mode-smoke.md)
 - **DoD:** All three modes demonstrable with health + static demo data
-- **Playground card:** none (banner / mode detection only)
+- **Playground card:** none (banner / mode detection + catalog only)
 
 ### Phase 2 — Boundary module
 
@@ -90,6 +90,6 @@ After Phases 0–3 (minimum viable product):
 
 1. One phase goal per PR when possible.
 2. Update [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md) in the same PR as new routes.
-3. Verify the Mode matrix before merging Mode-related changes.
+3. Verify the Mode matrix in [`../deploy/tri-mode-smoke.md`](../deploy/tri-mode-smoke.md) before merging Mode-related changes.
 4. Prefer extending `Endpoints/` and `Extensions/` over growing `Program.cs`.
 5. Keep playground cards ordered Phase 2 → 3 → 4; never shuffle for visual preference.

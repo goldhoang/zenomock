@@ -1,0 +1,10 @@
+{
+  "source": "showroom-static",
+  "endpoint": "GET /api/v1/boundary/strings/xss-payloads",
+  "note": "Preview only — live generator ships in Phase 2",
+  "samples": [
+    "<script>alert(1)</script>",
+    "\" onmouseover=\"alert(1)",
+    "'; DROP TABLE users; --"
+  ]
+}

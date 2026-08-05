@@ -19,4 +19,6 @@ npm run build    # respects VITE_BASE (default `/`)
 
 Local engine probe: `VITE_LOCAL_API_URL` (default `http://localhost:8080`).
 
-Product docs live in repo [`/docs`](../../docs/README.md) — not in this package README.
+JSON access: `src/lib/api.ts` (`resolveEngineStatus`, `getJson`) + `src/lib/mockRoutes.ts`.
+
+Product docs live in repo [`/docs`](../../docs/README.md) — not in this package README. Smoke: [`docs/deploy/tri-mode-smoke.md`](../../docs/deploy/tri-mode-smoke.md).

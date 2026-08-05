@@ -1,0 +1,9 @@
+{
+  "source": "showroom-static",
+  "endpoint": "GET /api/v1/boundary/strings/zalgo",
+  "note": "Preview only — live generator ships in Phase 2",
+  "samples": [
+    "Z̸̧̞a̷l̵g̸o̶ ̵t̷e̸x̵t̶",
+    "H̷e̸l̵l̶o̸ ̵W̷o̸r̵l̶d̸"
+  ]
+}
