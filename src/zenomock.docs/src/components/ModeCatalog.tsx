@@ -77,8 +77,8 @@ export function ModeCatalog({ status }: Props) {
         ) : null}
       </div>
       <p className="catalog__lead">
-        Static previews for upcoming modules. Live generators arrive in later
-        phases — this panel only proves Tri-Mode routing.
+        Static route map for Tri-Mode demos. Click a chip to preview JSON (engine
+        when live, otherwise packaged mock files).
       </p>
       {error ? <p className="catalog__error">{error}</p> : null}
       <ul className="catalog__list">

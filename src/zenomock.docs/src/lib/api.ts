@@ -135,6 +135,25 @@ export async function resolveEngineStatus(signal?: AbortSignal): Promise<EngineS
   }
 }
 
+class ApiRequestError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ApiRequestError'
+  }
+}
+
+async function readErrorMessage(response: Response): Promise<string> {
+  try {
+    const payload = (await response.json()) as { error?: string }
+    if (payload?.error) {
+      return payload.error
+    }
+  } catch {
+    /* ignore */
+  }
+  return `HTTP ${response.status}`
+}
+
 async function fetchEngineJson<T>(
   apiBaseUrl: string,
   path: string,
@@ -148,8 +167,14 @@ async function fetchEngineJson<T>(
       signal,
       headers: { Accept: 'application/json' },
     })
+    if (response.status === 404 || response.status === 400 || response.status === 409) {
+      throw new ApiRequestError(await readErrorMessage(response))
+    }
     return await readJson<T>(response)
-  } catch {
+  } catch (err) {
+    if (err instanceof ApiRequestError) {
+      throw err
+    }
     return null
   }
 }
@@ -172,8 +197,14 @@ async function fetchEnginePostJson<T>(
       },
       body: JSON.stringify(body),
     })
+    if (!response.ok) {
+      throw new ApiRequestError(await readErrorMessage(response))
+    }
     return await readJson<T>(response)
-  } catch {
+  } catch (err) {
+    if (err instanceof ApiRequestError) {
+      throw err
+    }
     return null
   }
 }
@@ -206,9 +237,17 @@ export async function getJson<T>(
   const status = options?.status ?? (await resolveEngineStatus(options?.signal))
 
   if ((status.mode === 'offline' || status.mode === 'hybrid') && status.apiBaseUrl) {
-    const engineData = await fetchEngineJson<T>(status.apiBaseUrl, path, options?.signal)
-    if (engineData !== null) {
-      return { data: engineData, source: 'engine' }
+    try {
+      const engineData = await fetchEngineJson<T>(status.apiBaseUrl, path, options?.signal)
+      if (engineData !== null) {
+        return { data: engineData, source: 'engine' }
+      }
+    } catch (err) {
+      const staticData = await fetchStaticJson<T>(path, options?.signal)
+      if (staticData !== null) {
+        return { data: staticData, source: 'static' }
+      }
+      throw err
     }
   }
 

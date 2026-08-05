@@ -1,5 +1,5 @@
 {
-  "phase": "boundary",
+  "phase": "schema-crud",
   "message": "ZenoMock showroom catalog",
   "hint": "Run ghcr.io/goldhoang/zenomock:latest on port 8080 for Hybrid Mode",
   "routes": [
@@ -25,7 +25,7 @@
       "path": "/api/v1/schemas",
       "title": "Schema catalog",
       "phase": 3,
-      "live": false
+      "live": true
     },
     {
       "path": "/api/v1/chaos/config",

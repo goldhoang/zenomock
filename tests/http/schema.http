@@ -1,0 +1,45 @@
+### List schemas
+GET http://localhost:8080/api/v1/schemas
+Accept: application/json
+
+###
+
+### Register products schema
+POST http://localhost:8080/api/v1/schemas
+Content-Type: application/json
+Accept: application/json
+
+{
+  "entity": "products",
+  "seedCount": 3,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string" },
+      "price": { "type": "number" },
+      "active": { "type": "boolean" }
+    },
+    "required": ["name"]
+  }
+}
+
+###
+
+### List products
+GET http://localhost:8080/api/v1/mock/products
+Accept: application/json
+
+###
+
+### Create product
+POST http://localhost:8080/api/v1/mock/products
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Zeno Mug",
+  "price": 12.5,
+  "active": true
+}
+
+###
