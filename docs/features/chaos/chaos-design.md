@@ -32,14 +32,16 @@ Simulate flaky networks and bad payloads against **your** client code by injecti
 
 Implementation: `Middleware/ChaosMiddleware.cs` + `Services/Chaos/ChaosConfigStore.cs`.
 
-1. Runs only for paths under `/api/`.
-2. **Skips** `/api/v1/chaos/*` so controls stay reachable.
+1. Applies to `/api/*` **and** `/proxy/*`.
+2. **Skips** `/api/v1/chaos/*` and `/api/v1/proxy/*` so controls stay reachable.
 3. Does **not** run for `/health` or static SPA files.
 4. Order per request: delay → optional short-circuit `500` → otherwise call next → optional JSON corruption on 2xx JSON bodies.
 5. Rates snap to whole percents; **0% never**, **100% always** (`ChaosChance`). Mid values use `Next(100) < percent`.
 6. Injected `500` short-circuits — corrupt JSON is not evaluated on that request.
 
 Corruption strategies (random): truncated payload, swapped quotes, missing braces.
+
+Allowlisted upstream forward: [`proxy-design.md`](./proxy-design.md).
 
 ## Playground
 

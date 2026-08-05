@@ -210,46 +210,49 @@ Collection: `tests/http/chaos.http`. Design nội bộ: [`../features/chaos/chao
 
 ---
 
-## 5. Phase 5 — Chaos proxy (kế hoạch, chưa ship)
+## 5. Phase 5 — Chaos proxy (đã ship)
 
-### Mục tiêu
+### Mục đích
 
-Cho phép ZenoMock **forward** request tới upstream **đã allowlist** (API staging / service nội bộ), rồi **áp cùng lớp chaos** (latency / 500 / corrupt) lên traffic đi qua proxy — để test client chống lỗi trên **API gần thật**, không chỉ mock thuần.
-
-### Shape dự kiến
-
-```http
-ANY /proxy/{**path}
-```
-
-Ví dụ (minh họa):
+Forward request qua ZenoMock tới **một upstream đã cấu hình** (`Proxy:UpstreamBaseUrl`), chỉ khi **host nằm trong allowlist**. Chaos Phase 4 cũng áp lên `/proxy/*` → test client với payload “gần thật” + lỗi giả.
 
 ```text
-Client → GET http://localhost:8080/proxy/v1/orders
-       → (allowlist) https://staging.example.com/v1/orders
-       → response (+ optional chaos)
+Client → GET http://localhost:8080/proxy/api/v1/boundary/strings/xss-payloads
+       → (Dev) http://127.0.0.1:8080/api/v1/boundary/strings/xss-payloads
+       → (+ optional chaos)
 ```
 
-### Vì sao phải có allowlist (SSRF)
+### Cấu hình
 
-Proxy mở = client có thể bảo ZenoMock gọi `http://169.254.169.254/` (cloud metadata) hoặc intranet bất kỳ → **SSRF**.  
-Phase 5 **bắt buộc**:
+| Môi trường | Upstream mặc định | Allowlist |
+| :--- | :--- | :--- |
+| Development | `http://127.0.0.1:8080` | `127.0.0.1`, `localhost` |
+| Production / Docker | `https://httpbin.org` | `httpbin.org` |
 
-- Host allowlist (config / env), default deny.
-- Timeout, giới hạn body, không follow redirect lung tung.
-- Không proxy khi Showroom-only (Pages) nếu không có engine.
-- Ghi threat notes trong `docs/features/chaos/`.
+Sửa `appsettings*.json` section `Proxy`. Allowlist rỗng = **deny all**.
 
-### Kịch bản tester khi Phase 5 có
+### Trong playground
 
-1. Thêm `staging.api.internal` vào allowlist local.
-2. Point app tới `http://localhost:8080/proxy/...` thay vì gọi staging trực tiếp.
-3. Bật chaos 30% 500 → quan sát retry/circuit breaker của app trên **payload thật từ staging**.
-4. Tắt chaos / bỏ proxy khi demo xong.
+1. Card **Chaos Proxy** — xem upstream + allowed hosts.
+2. Nhập path (Dev: `/api/v1/boundary/strings/xss-payloads`; httpbin: `/get`).
+3. **Probe /proxy** — xem status, header `X-ZenoMock-Upstream`, body.
+4. (Tuỳ chọn) Chaos Control → Apply 500 100% → Probe proxy → luôn 500 (short-circuit trước khi forward).
 
-### DoD roadmap
+### Bảo vệ SSRF (tóm tắt)
 
-Xem [`../roadmap/mvp-and-phases.md`](../roadmap/mvp-and-phases.md) — Phase 5 optional/advanced; nhánh đề xuất: `feat/chaos-proxy`.
+- Chỉ host trong allowlist; scheme http/https; không userinfo; không follow redirect.
+- Chặn cứng metadata (`169.254.169.254`, …).
+- Không forward nested `/proxy/...`.
+- Timeout + giới hạn body.
+
+Chi tiết: [`../features/chaos/proxy-design.md`](../features/chaos/proxy-design.md). Collection: `tests/http/proxy.http`.
+
+### Kịch bản tester
+
+1. Point app tới `http://localhost:8080/proxy/...` thay vì gọi staging trực tiếp (staging host phải có trong allowlist + `UpstreamBaseUrl`).
+2. Bật chaos 30–40% 500 → quan sát retry trên response proxied.
+3. Thử host không allowlist → expect **403** `proxy-denied`.
+4. Reset chaos khi xong.
 
 ---
 
@@ -260,20 +263,28 @@ Xem [`../roadmap/mvp-and-phases.md`](../roadmap/mvp-and-phases.md) — Phase 5 o
 2. Boundary → copy XSS/Zalgo → dán form app thật
 3. Schema → register products → FE gắn baseURL mock
 4. Chaos → Apply latency/500/corrupt → Probe + refresh FE
-5. (Sau này) Proxy allowlist → chaos trên staging path
+5. Proxy → Probe /proxy/... (+ chaos) trên upstream allowlist
 6. Reset chaos trước khi commit / tắt máy
 ```
 
 ---
 
-## 7. Liên kết nhanh
+## 7. Sau Phase 5
+
+Lộ trình polish / hardening / mở rộng: [`../roadmap/future-upgrades.md`](../roadmap/future-upgrades.md).
+
+---
+
+## 8. Liên kết nhanh
 
 | Chủ đề | File |
 | :--- | :--- |
 | Phases / DoD | [`../roadmap/mvp-and-phases.md`](../roadmap/mvp-and-phases.md) |
+| Future upgrades | [`../roadmap/future-upgrades.md`](../roadmap/future-upgrades.md) |
 | Tri-Mode kiến trúc | [`../architecture/tri-mode-architecture.md`](../architecture/tri-mode-architecture.md) |
 | API | [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md) |
 | Boundary design | [`../features/boundary/boundary-design.md`](../features/boundary/boundary-design.md) |
 | Schema design | [`../features/schema/schema-design.md`](../features/schema/schema-design.md) |
 | Chaos design | [`../features/chaos/chaos-design.md`](../features/chaos/chaos-design.md) |
+| Proxy design | [`../features/chaos/proxy-design.md`](../features/chaos/proxy-design.md) |
 | Deploy / smoke | [`../deploy/`](../deploy/) |

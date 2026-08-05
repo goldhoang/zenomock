@@ -1,5 +1,6 @@
 import { BoundaryExplorer } from './components/BoundaryExplorer'
 import { ChaosControlPanel } from './components/ChaosControlPanel'
+import { ChaosProxyPanel } from './components/ChaosProxyPanel'
 import { DockerCopyCommand } from './components/DockerCopyCommand'
 import { EnvironmentBanner } from './components/EnvironmentBanner'
 import { ModeCatalog } from './components/ModeCatalog'
@@ -71,6 +72,10 @@ function App() {
         <ChaosControlPanel status={status} />
       </div>
 
+      <div className="reveal reveal--delay-4">
+        <ChaosProxyPanel status={status} />
+      </div>
+
       <section className="panels reveal reveal--delay-4" aria-label="Roadmap modules">
         <PanelPlaceholder
           phase="Phase 2"
@@ -92,6 +97,13 @@ function App() {
           href="#chaos-control"
           title="Chaos Control Panel"
           description="Latency, 5xx rates, and corrupted JSON injection against /api/* — not /health."
+        />
+        <PanelPlaceholder
+          phase="Phase 5"
+          status="ready"
+          href="#chaos-proxy"
+          title="Chaos Proxy"
+          description="Allowlisted /proxy forward with SSRF guards; chaos knobs apply to proxied calls."
         />
       </section>
 

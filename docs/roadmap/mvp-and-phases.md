@@ -27,13 +27,13 @@ After Phases 0–3 (minimum viable product):
 - Authentication / multi-tenant / billing
 - Persistent database (EF Core, Redis, etc.)
 - Full Postman replacement or OpenAPI import suite
-- Unrestricted reverse-proxy chaos (`/proxy/*`) in early phases
+- Unrestricted reverse-proxy chaos (`/proxy/*` without allowlist)
 - Claiming Tailwind (or other UI kits) before they are actually installed
 
 ## Phased backlog
 
 > **UI rule:** Playground feature cards MUST render in ascending phase order
-> (**Phase 2 → 3 → 4**). Flip card `status` from `coming-soon` → `ready` when that module ships (ready cards get hover border + click target).
+> (**Phase 2 → 3 → 4 → 5**). Flip card `status` from `coming-soon` → `ready` when that module ships (ready cards get hover border + click target).
 
 ### Phase 0 — Foundation *(done)*
 
@@ -83,12 +83,19 @@ After Phases 0–3 (minimum viable product):
 - **Playground card:** 3rd — *Chaos Control Panel* (`ready`)
 - Design: [`../features/chaos/chaos-design.md`](../features/chaos/chaos-design.md)
 
-### Phase 5 — Chaos proxy *(optional / advanced)*
+### Phase 5 — Chaos proxy *(done)*
 
-- `ANY /proxy/{**path}` with **host allowlist**, timeouts, no open SSRF
-- Only after Phases 0–4 are solid
-- **DoD:** Documented allowlist + threat notes in `/docs/features/chaos/`
-- **Playground card:** add later if shipped
+- `GET /api/v1/proxy/config`
+- `ANY /proxy/{**path}` → `Proxy:UpstreamBaseUrl` + path with **host allowlist**, timeouts, body limits, no redirects, metadata hard-block
+- Chaos middleware also applies to `/proxy/*`
+- Chaos Proxy playground panel + card `ready`
+- **DoD:** Documented allowlist + threat notes; deny-by-default when allowlist empty / host mismatch
+- **Playground card:** 4th — *Chaos Proxy* (`ready`)
+- Design: [`../features/chaos/proxy-design.md`](../features/chaos/proxy-design.md)
+
+### After Phase 5
+
+See polish / hardening / optional expansions: [`future-upgrades.md`](./future-upgrades.md).
 
 ## Working agreement
 
@@ -96,4 +103,4 @@ After Phases 0–3 (minimum viable product):
 2. Update [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md) in the same PR as new routes.
 3. Verify the Mode matrix in [`../deploy/tri-mode-smoke.md`](../deploy/tri-mode-smoke.md) before merging Mode-related changes.
 4. Prefer extending `Endpoints/` and `Extensions/` over growing `Program.cs`.
-5. Keep playground cards ordered Phase 2 → 3 → 4; never shuffle for visual preference.
+5. Keep playground cards ordered Phase 2 → 3 → 4 → 5; never shuffle for visual preference.

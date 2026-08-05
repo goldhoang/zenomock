@@ -7,6 +7,7 @@ export const STATIC_MOCK_ROUTES: Record<string, string> = {
   '/api/v1/boundary/strings/overflow': 'mock/boundary/overflow.json',
   '/api/v1/schemas': 'mock/schema/catalog.json',
   '/api/v1/chaos/config': 'mock/chaos/config.json',
+  '/api/v1/proxy/config': 'mock/proxy/config.json',
 }
 
 export function resolveStaticMockUrl(apiPath: string): string | null {

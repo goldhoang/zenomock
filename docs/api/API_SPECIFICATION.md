@@ -118,12 +118,30 @@ Storage: process memory only. Design: [`../features/schema/schema-design.md`](..
 | `error500Rate` | 0–1 |
 | `corruptedJsonRate` | 0–1 |
 
-Middleware applies to `/api/*` only (exclude `/health`, static files, and `/api/v1/chaos/*`).  
+Middleware applies to `/api/*` and `/proxy/*` (exclude `/health`, static files, `/api/v1/chaos/*`, `/api/v1/proxy/*`).  
 Design: [`../features/chaos/chaos-design.md`](../features/chaos/chaos-design.md).
 
-### Chaos proxy — **Planned (Phase 5, optional)**
+---
 
-`ANY /proxy/{**path}` — forward to allowlisted upstream only (SSRF guards required).
+## Chaos proxy — **Done (Phase 5)**
+
+| Method | Path | Notes |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/proxy/config` | Read allowlist / upstream (not chaosed) |
+| `ANY` | `/proxy/{**path}` | Forward to `Proxy:UpstreamBaseUrl` + path; SSRF guards |
+
+### Config (`appsettings` → `Proxy`)
+
+| Key | Role |
+| :--- | :--- |
+| `Enabled` | Master switch |
+| `UpstreamBaseUrl` | Single forward base (e.g. `https://httpbin.org` or `http://127.0.0.1:8080`) |
+| `AllowedHosts` | Exact host allowlist; empty = deny all |
+| `TimeoutSeconds` | Upstream timeout |
+| `MaxRequestBodyBytes` / `MaxResponseBodyBytes` | Size caps |
+
+Development defaults loopback to the local engine for self-demo; production image defaults to `httpbin.org`.  
+Threat notes: [`../features/chaos/proxy-design.md`](../features/chaos/proxy-design.md).
 
 ---
 
@@ -140,5 +158,6 @@ When the engine is offline (or a live route is not implemented yet), `getJson` r
 | `/api/v1/boundary/strings/overflow` | `mock/boundary/overflow.json` |
 | `/api/v1/schemas` | `mock/schema/catalog.json` |
 | `/api/v1/chaos/config` | `mock/chaos/config.json` |
+| `/api/v1/proxy/config` | `mock/proxy/config.json` |
 
 On GitHub Pages these resolve under `/zenomock/mock/…`. Boundary GET routes are **live** on the engine; static files remain Showroom fallback. Fuzz POST falls back to a client-side mutator when the engine is offline.

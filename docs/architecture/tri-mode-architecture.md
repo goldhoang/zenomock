@@ -70,5 +70,5 @@ Browser on `https://goldhoang.github.io` calling `http://localhost:8080` require
 
 ## Security notes
 
-- Open reverse proxy without allowlist is **out of scope** until Phase 5.
-- `/health` must stay reachable without chaos so the UI can detect the engine.
+- Chaos proxy (`/proxy/{**path}`) is **allowlist-only** — see [`../features/chaos/proxy-design.md`](../features/chaos/proxy-design.md). Never ship an open forwarder.
+- `/health`, `/api/v1/chaos/*`, and `/api/v1/proxy/config` must stay reachable without chaos so the UI can detect/configure the engine.
