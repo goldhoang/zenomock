@@ -4,7 +4,7 @@ public sealed class ProxyOptions
 {
     public const string SectionName = "Proxy";
 
-    /// <summary>When false, /proxy returns 503.</summary>
+    /// <summary>When false, /proxy returns 403 proxy-denied.</summary>
     public bool Enabled { get; set; } = true;
 
     /// <summary>Base URL for forwards, e.g. https://httpbin.org or http://127.0.0.1:8080.</summary>

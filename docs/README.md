@@ -13,9 +13,10 @@ Central knowledge base for the ZenoMock monorepo (local-first mock engine + GitH
 | [`/api`](./api/) | HTTP contracts (`API_SPECIFICATION.md`) |
 | [`/deploy`](./deploy/) | Docker, GHCR, GitHub Pages, smoke checks |
 | [`/guides`](./guides/) | How-to end-to-end (Vietnamese deep-dive) |
-| [`/features`](./features/) | Per-module design docs (filled as features land) |
+| [`/features`](./features/) | Per-module design docs (Phases 2–5 shipped) |
 
-Post–Phase 5 polish backlog: [`roadmap/future-upgrades.md`](./roadmap/future-upgrades.md).
+Post–Phase 5 polish backlog: [`roadmap/future-upgrades.md`](./roadmap/future-upgrades.md).  
+Security (local-first threat model): [`../SECURITY.md`](../SECURITY.md) · Contributing: [`../CONTRIBUTING.md`](../CONTRIBUTING.md).
 
 ---
 

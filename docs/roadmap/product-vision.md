@@ -36,7 +36,8 @@ One **Docker image** that covers:
 
 1. Happy path — dynamic CRUD from JSON Schema (in-memory).
 2. Boundary / edge-case generators.
-3. Chaos injection (latency, error rates, corrupt payloads) — phased.
+3. Chaos injection (latency, error rates, corrupt payloads) on `/api/*` and `/proxy/*`.
+4. Allowlisted chaos proxy to a configured upstream (SSRF guards).
 
 Plus a **Tri-Mode** web UI: full offline container, static GitHub Pages showroom, or hybrid (Pages UI + local engine).
 
@@ -50,7 +51,7 @@ Plus a **Tri-Mode** web UI: full offline container, static GitHub Pages showroom
 
 Details: [`../architecture/tri-mode-architecture.md`](../architecture/tri-mode-architecture.md).
 
-## 4. Backend modules (target shape)
+## 4. Backend modules (shipped)
 
 Stack: **.NET 10 Minimal API** (extension methods + `Map*Endpoints`), React/Vite UI.
 
@@ -59,17 +60,20 @@ Stack: **.NET 10 Minimal API** (extension methods + `Map*Endpoints`), React/Vite
 | Diagnostics | `GET /health` — engine discovery for the UI |
 | Schema & mock CRUD | Define entities; in-memory list/get/create |
 | Boundary | Zalgo, XSS samples, overflow strings, fuzz JSON |
-| Chaos | Latency / 5xx / corrupt JSON on API responses |
-| Chaos proxy *(late phase)* | Forward to a real upstream with injection — allowlist only |
+| Chaos | Latency / 5xx / corrupt JSON on `/api/*` and `/proxy/*` |
+| Chaos proxy | Forward to a configured upstream — allowlist only |
 
 Exact routes: [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md).
 
-## 5. Frontend experience (target shape)
+## 5. Frontend experience (shipped)
 
-1. **Smart Environment Indicator** — Local Connected vs Showroom (poll `/health` ~5s).
-2. **Schema & API Playground** — edit schema, call generated endpoints.
-3. **Chaos Control Panel** — sliders for latency / error / corrupt rates.
-4. **Boundary Data Explorer** — copy JSON / cURL for nightmare payloads.
+1. **Smart Environment Indicator** — Local Connected vs Showroom (health poll).
+2. **Sticky section nav** — Catalog · Boundary · Schema · Chaos · Proxy · Modules.
+3. **Boundary Data Explorer** — copy JSON / cURL; highlighted previews.
+4. **Schema & API Playground** — edit schema, call generated endpoints.
+5. **Chaos Control Panel** — sliders for latency / error / corrupt rates.
+6. **Chaos Proxy panel** — probe allowlisted `/proxy/{**path}`.
+7. **Author footer** — GoldHoang links (`goldhoang.dev`).
 
 ## 6. Portfolio / learning value
 

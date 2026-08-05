@@ -18,7 +18,7 @@ public static class ChaosEndpoints
                     latencyMs = config.LatencyMs,
                     error500Rate = config.Error500Rate,
                     corruptedJsonRate = config.CorruptedJsonRate,
-                    appliesTo = "/api/* except /api/v1/chaos/* and /health"
+                    appliesTo = "/api/* and /proxy/* except /api/v1/chaos/*, /api/v1/proxy/*, /health"
                 });
             })
             .WithName("GetChaosConfig");

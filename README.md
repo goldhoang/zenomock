@@ -85,8 +85,8 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phases 0–5 complete** (foundation → boundary → schema → chaos → allowlisted proxy).  
-**Wave A UI/UX polish** ships sticky nav, JSON highlighting, and author footer — see [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
+**Phases 0–5 complete** + **Wave A UI/UX polish**.  
+Security notes for local-first deploy: [`SECURITY.md`](./SECURITY.md). Next optional wave: hardening CI — [`docs/roadmap/future-upgrades.md`](./docs/roadmap/future-upgrades.md).
 
 ---
 

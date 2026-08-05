@@ -48,7 +48,7 @@ export function BoundaryExplorer({ status }: Props) {
 
   useEffect(() => {
     const id = window.setTimeout(() => {
-      setDebouncedOverflow(Math.min(Math.max(overflowLength, 1), 100000))
+      setDebouncedOverflow(Math.min(Math.max(overflowLength, 1), 16_000))
     }, OVERFLOW_DEBOUNCE_MS)
     return () => window.clearTimeout(id)
   }, [overflowLength])
@@ -138,7 +138,7 @@ export function BoundaryExplorer({ status }: Props) {
     }
     const path =
       tool === 'overflow'
-        ? `${active.path}?length=${Math.min(Math.max(overflowLength, 1), 100000)}`
+        ? `${active.path}?length=${Math.min(Math.max(overflowLength, 1), 16_000)}`
         : active.path
     return `curl -s "${curlBase}${path}"`
   })()
@@ -204,10 +204,13 @@ export function BoundaryExplorer({ status }: Props) {
           <input
             type="number"
             min={1}
-            max={100000}
+            max={16000}
             value={overflowLength}
             onChange={(e) => setOverflowLength(Number(e.target.value) || 1)}
           />
+          <span className="explorer__muted" style={{ margin: 0 }}>
+            UI caps at 16k (preview truncates further)
+          </span>
         </label>
       ) : null}
 

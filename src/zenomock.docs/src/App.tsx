@@ -33,6 +33,7 @@ function App() {
     <div className="app" id="top">
       <StickyNav />
 
+      <main>
       <div className="reveal">
         <EnvironmentBanner
           mode={status.mode}
@@ -121,6 +122,7 @@ function App() {
           description="Allowlisted /proxy forward with SSRF guards; chaos knobs apply to proxied calls."
         />
       </section>
+      </main>
 
       <SiteFooter modeLabel={modeLabel(status.mode)} />
       <BackToTop />

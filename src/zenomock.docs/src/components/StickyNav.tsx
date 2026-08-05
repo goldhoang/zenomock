@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 export type NavItem = {
   id: string
@@ -22,6 +22,8 @@ export function StickyNav({ items = ITEMS }: Props) {
   const [active, setActive] = useState(items[0]?.id ?? '')
   const [menuOpen, setMenuOpen] = useState(false)
   const menuId = useId()
+  const navRef = useRef<HTMLElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const hash = window.location.hash.replace(/^#/, '')
@@ -71,6 +73,35 @@ export function StickyNav({ items = ITEMS }: Props) {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  useEffect(() => {
+    if (!menuOpen) {
+      return
+    }
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        toggleRef.current?.focus()
+      }
+    }
+
+    const onPointer = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node | null
+      if (target && navRef.current && !navRef.current.contains(target)) {
+        setMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('mousedown', onPointer)
+    document.addEventListener('touchstart', onPointer)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('mousedown', onPointer)
+      document.removeEventListener('touchstart', onPointer)
+    }
+  }, [menuOpen])
+
   const goTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     history.replaceState(null, '', window.location.pathname)
@@ -90,6 +121,7 @@ export function StickyNav({ items = ITEMS }: Props) {
 
   return (
     <nav
+      ref={navRef}
       className={menuOpen ? 'sticky-nav sticky-nav--open' : 'sticky-nav'}
       aria-label="Playground sections"
     >
@@ -106,10 +138,12 @@ export function StickyNav({ items = ITEMS }: Props) {
         </a>
 
         <button
+          ref={toggleRef}
           type="button"
           className="sticky-nav__toggle"
           aria-expanded={menuOpen}
           aria-controls={menuId}
+          aria-haspopup="true"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           onClick={() => setMenuOpen((v) => !v)}
         >
