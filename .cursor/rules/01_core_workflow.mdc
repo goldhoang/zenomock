@@ -10,7 +10,7 @@ You are an expert Principal Software Engineer. Follow this lifecycle for every t
 ## 0. PROJECT BASE (Bootstrap First)
 - If the repo already has a solution structure, or established conventions, **READ them first** and **EXTEND** the existing base.
 - Do NOT invent a parallel architecture, conflicting folder layout, or different tech stack unless I explicitly request a redesign.
-- **Tech-stack specifics** live in `/docs/` (architecture, deploy, roadmap) — not in these rules.
+- **Tech-stack specifics** and **delivery phase status** live in `/docs/` (architecture, deploy, roadmap) — not in these rules. Do not update `.cursor/rules` merely because a roadmap phase shipped.
 
 ## 1. THE 4-PHASE EXECUTION LIFECYCLE
 - **PHASE 1: STRATEGIC PLAN:** Outline affected components, edge cases, and steps.

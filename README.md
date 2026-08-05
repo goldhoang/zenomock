@@ -73,11 +73,12 @@ Start here: [`docs/README.md`](./docs/README.md)
 | [`docs/roadmap/mvp-and-phases.md`](./docs/roadmap/mvp-and-phases.md) | MVP scope & phases |
 | [`docs/architecture/tri-mode-architecture.md`](./docs/architecture/tri-mode-architecture.md) | Runtime model |
 | [`docs/api/API_SPECIFICATION.md`](./docs/api/API_SPECIFICATION.md) | HTTP contracts |
-| [`docs/deploy/ghcr-and-pages.md`](./docs/deploy/ghcr-and-pages.md) | Deploy & smoke |
+| [`docs/deploy/ghcr-and-pages.md`](./docs/deploy/ghcr-and-pages.md) | Deploy & GHCR |
+| [`docs/deploy/tri-mode-smoke.md`](./docs/deploy/tri-mode-smoke.md) | Mode 1 / 2 / 3 smoke |
 
 ## 🧭 Current status
 
-**Phase 0 — Foundation** is in progress on branch workflows: health, CORS, SPA host, playground shell, docs, CI. Feature modules (Boundary → Schema → Chaos) follow the roadmap.
+**Phase 1 — Mode glue:** Tri-Mode detection (Full Offline / Showroom / Hybrid), static Showroom catalog, smoke matrix in [`docs/deploy/tri-mode-smoke.md`](./docs/deploy/tri-mode-smoke.md). Next: **Phase 2 Boundary**.
 
 ---
 

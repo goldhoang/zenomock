@@ -1,6 +1,37 @@
 {
-  "message": "ZenoMock showroom fallback",
+  "phase": "mode-glue",
+  "message": "ZenoMock showroom catalog",
   "hint": "Run ghcr.io/goldhoang/zenomock:latest on port 8080 for Hybrid Mode",
-  "modules": ["boundary", "schema", "chaos"],
-  "phase": "foundation"
+  "routes": [
+    {
+      "path": "/api/v1/boundary/strings/zalgo",
+      "title": "Boundary · Zalgo",
+      "phase": 2,
+      "live": false
+    },
+    {
+      "path": "/api/v1/boundary/strings/xss-payloads",
+      "title": "Boundary · XSS payloads",
+      "phase": 2,
+      "live": false
+    },
+    {
+      "path": "/api/v1/boundary/strings/overflow",
+      "title": "Boundary · Overflow",
+      "phase": 2,
+      "live": false
+    },
+    {
+      "path": "/api/v1/schemas",
+      "title": "Schema catalog",
+      "phase": 3,
+      "live": false
+    },
+    {
+      "path": "/api/v1/chaos/config",
+      "title": "Chaos config",
+      "phase": 4,
+      "live": false
+    }
+  ]
 }

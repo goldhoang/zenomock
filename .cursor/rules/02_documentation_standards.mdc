@@ -7,6 +7,7 @@ globs: **/docs/**/*,**/tests/**/*
 
 ## 0. SOURCE OF TRUTH
 - Stack and Tri-Mode laws are defined in `/docs/architecture/` and `/docs/roadmap/`.
+- Roadmap progress (`done` / next phase) is updated in `/docs/roadmap/` only — never mirrored into `.cursor/rules`.
 - Each major topic should be self-contained: a reader can understand context and practice from that file without jumping across many scattered files.
 
 ## 1. HYBRID LANGUAGE POLICY

@@ -1,0 +1,8 @@
+{
+  "source": "showroom-static",
+  "endpoint": "GET /api/v1/chaos/config",
+  "note": "Preview only — chaos injection ships in Phase 4",
+  "latencyMs": 0,
+  "error500Rate": 0,
+  "corruptedJsonRate": 0
+}

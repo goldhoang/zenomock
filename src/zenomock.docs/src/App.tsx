@@ -1,40 +1,34 @@
-import { useEffect, useState } from 'react'
 import { DockerCopyCommand } from './components/DockerCopyCommand'
 import { EnvironmentBanner } from './components/EnvironmentBanner'
+import { ModeCatalog } from './components/ModeCatalog'
 import { PanelPlaceholder } from './components/PanelPlaceholder'
-import { HEALTH_POLL_MS, resolveEngineStatus, type EngineStatus } from './lib/api'
+import type { EngineMode } from './lib/config'
+import { useEngineStatus } from './lib/useEngineStatus'
 import './App.css'
 
-const initialStatus: EngineStatus = {
-  mode: 'checking',
-  health: null,
-  apiBaseUrl: null,
+function modeLabel(mode: EngineMode): string {
+  switch (mode) {
+    case 'offline':
+      return 'Mode 1 · Full Offline'
+    case 'hybrid':
+      return 'Mode 3 · Hybrid'
+    case 'showroom':
+      return 'Mode 2 · Showroom'
+    default:
+      return 'Detecting'
+  }
 }
 
 function App() {
-  const [status, setStatus] = useState<EngineStatus>(initialStatus)
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    const tick = async () => {
-      const next = await resolveEngineStatus(controller.signal)
-      if (!controller.signal.aborted) {
-        setStatus(next)
-      }
-    }
-
-    void tick()
-    const id = window.setInterval(() => void tick(), HEALTH_POLL_MS)
-    return () => {
-      controller.abort()
-      window.clearInterval(id)
-    }
-  }, [])
+  const status = useEngineStatus()
 
   return (
     <div className="app">
-      <EnvironmentBanner mode={status.mode} health={status.health} />
+      <EnvironmentBanner
+        mode={status.mode}
+        health={status.health}
+        displayTarget={status.displayTarget}
+      />
 
       <header className="hero">
         <p className="hero__eyebrow">Local-first mock engine</p>
@@ -55,6 +49,8 @@ function App() {
           <DockerCopyCommand />
         </div>
       </header>
+
+      <ModeCatalog status={status} />
 
       <section className="panels" aria-label="Roadmap modules">
         <PanelPlaceholder
@@ -78,14 +74,7 @@ function App() {
       </section>
 
       <footer className="footer">
-        <span>
-          Mode:{' '}
-          {status.mode === 'local'
-            ? 'Hybrid / Local'
-            : status.mode === 'showroom'
-              ? 'Showroom'
-              : 'Detecting'}
-        </span>
+        <span>Mode: {modeLabel(status.mode)}</span>
         <a href="https://goldhoang.github.io/zenomock/">Playground</a>
       </footer>
     </div>

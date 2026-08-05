@@ -57,6 +57,8 @@ npm run dev
 
 ## Mode matrix
 
+Full click-through checklist: [`tri-mode-smoke.md`](./tri-mode-smoke.md).
+
 | Scenario | Expect |
 | :--- | :--- |
 | Docker only | Mode 1 — UI + API same origin |
