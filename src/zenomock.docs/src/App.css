@@ -631,6 +631,31 @@
   color: var(--warn);
 }
 
+.chaos__slider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.chaos__slider strong {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.chaos__slider input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.chaos__slider input[type='range']:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;

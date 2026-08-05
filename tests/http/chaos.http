@@ -1,0 +1,30 @@
+### Get chaos config
+GET http://localhost:8080/api/v1/chaos/config
+Accept: application/json
+
+###
+
+### Set chaos config
+POST http://localhost:8080/api/v1/chaos/config
+Content-Type: application/json
+Accept: application/json
+
+{
+  "latencyMs": 800,
+  "error500Rate": 0.4,
+  "corruptedJsonRate": 0.2
+}
+
+###
+
+### Probe an API under chaos (repeat a few times)
+GET http://localhost:8080/api/v1/boundary/strings/xss-payloads
+Accept: application/json
+
+###
+
+### Reset chaos
+POST http://localhost:8080/api/v1/chaos/reset
+Accept: application/json
+
+###

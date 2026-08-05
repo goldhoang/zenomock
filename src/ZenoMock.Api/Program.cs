@@ -13,16 +13,19 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddZenoMockCors(builder.Configuration, builder.Environment);
 builder.Services.AddZenoMockOpenApi();
 builder.Services.AddZenoMockSchemaStore();
+builder.Services.AddZenoMockChaos();
 
 var app = builder.Build();
 
 app.UseZenoMockOpenApi();
 app.UseCors(CorsExtensions.PolicyName);
 app.UseZenoMockStaticFiles();
+app.UseZenoMockChaos();
 
 app.MapHealthEndpoints();
 app.MapBoundaryEndpoints();
 app.MapSchemaEndpoints();
+app.MapChaosEndpoints();
 app.MapZenoMockSpaFallback();
 
 app.Run();

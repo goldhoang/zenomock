@@ -12,6 +12,7 @@ Central knowledge base for the ZenoMock monorepo (local-first mock engine + GitH
 | [`/architecture`](./architecture/) | Tri-Mode runtime model and monorepo layout |
 | [`/api`](./api/) | HTTP contracts (`API_SPECIFICATION.md`) |
 | [`/deploy`](./deploy/) | Docker, GHCR, GitHub Pages, smoke checks |
+| [`/guides`](./guides/) | How-to end-to-end (Vietnamese deep-dive) |
 | [`/features`](./features/) | Per-module design docs (filled as features land) |
 
 ---

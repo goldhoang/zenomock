@@ -13,7 +13,7 @@ type PreviewState = {
 } | null
 
 export function ModeCatalog({ status }: Props) {
-  const { mode, apiBaseUrl, health, displayTarget } = status
+  const { mode, apiBaseUrl } = status
   const [catalog, setCatalog] = useState<MockCatalog | null>(null)
   const [catalogSource, setCatalogSource] = useState<DataSource | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -25,7 +25,12 @@ export function ModeCatalog({ status }: Props) {
       return
     }
 
-    const snapshot: EngineStatus = { mode, apiBaseUrl, health, displayTarget }
+    const snapshot: EngineStatus = {
+      mode,
+      apiBaseUrl,
+      health: status.health,
+      displayTarget: status.displayTarget,
+    }
     const controller = new AbortController()
     void getJson<MockCatalog>('/mock-catalog', {
       signal: controller.signal,
@@ -49,7 +54,7 @@ export function ModeCatalog({ status }: Props) {
       })
 
     return () => controller.abort()
-  }, [mode, apiBaseUrl, health, displayTarget])
+  }, [mode, apiBaseUrl])
 
   const loadRoute = async (route: CatalogRoute) => {
     setLoadingPath(route.path)

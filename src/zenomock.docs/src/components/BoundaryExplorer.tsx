@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getJson, postJson, type DataSource, type EngineStatus } from '../lib/api'
 import { LOCAL_API_URL } from '../lib/config'
 import { fuzzJsonClientSide } from '../lib/fuzzJson'
@@ -28,24 +28,40 @@ const DEFAULT_FUZZ = `{
   "profile": { "age": 30, "city": "HN" }
 }`
 
+const OVERFLOW_DEBOUNCE_MS = 350
+
 export function BoundaryExplorer({ status }: Props) {
   const { mode, apiBaseUrl } = status
   const [tool, setTool] = useState<ToolId>('zalgo')
   const [overflowLength, setOverflowLength] = useState(256)
+  const [debouncedOverflow, setDebouncedOverflow] = useState(256)
   const [fuzzInput, setFuzzInput] = useState(DEFAULT_FUZZ)
   const [payload, setPayload] = useState<unknown>(null)
   const [source, setSource] = useState<DataSource | 'client' | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [copied, setCopied] = useState<'json' | 'curl' | null>(null)
+  const hasPayloadRef = useRef(false)
 
   const active = TOOLS.find((t) => t.id === tool)!
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setDebouncedOverflow(Math.min(Math.max(overflowLength, 1), 100000))
+    }, OVERFLOW_DEBOUNCE_MS)
+    return () => window.clearTimeout(id)
+  }, [overflowLength])
+
+  useEffect(() => {
+    hasPayloadRef.current = payload != null
+  }, [payload])
 
   useEffect(() => {
     if (mode === 'checking' || tool === 'fuzz') {
       return
     }
 
+    // Only routing fields — do not re-fetch on health poll ticks.
     const snapshot: EngineStatus = {
       mode,
       apiBaseUrl,
@@ -55,10 +71,15 @@ export function BoundaryExplorer({ status }: Props) {
     const controller = new AbortController()
     const path =
       tool === 'overflow'
-        ? `${active.path}?length=${Math.min(Math.max(overflowLength, 1), 100000)}`
+        ? `${active.path}?length=${debouncedOverflow}`
         : active.path
 
-    setBusy(true)
+    // Avoid inserting a "Loading…" row that shoves the preview down on every fetch.
+    const showBlockingSpinner = !hasPayloadRef.current
+    if (showBlockingSpinner) {
+      setBusy(true)
+    }
+
     void getJson<unknown>(path, { signal: controller.signal, status: snapshot })
       .then((result) => {
         if (controller.signal.aborted) {
@@ -83,7 +104,7 @@ export function BoundaryExplorer({ status }: Props) {
       })
 
     return () => controller.abort()
-  }, [mode, apiBaseUrl, tool, overflowLength, active.path, status.health, status.displayTarget])
+  }, [mode, apiBaseUrl, tool, debouncedOverflow, active.path])
 
   const runFuzz = async () => {
     setBusy(true)
@@ -137,8 +158,19 @@ export function BoundaryExplorer({ status }: Props) {
     }
   }
 
+  const onSelectTool = (id: ToolId) => {
+    if (id === tool) {
+      return
+    }
+    setTool(id)
+    setPayload(null)
+    setSource(null)
+    setError(null)
+    hasPayloadRef.current = false
+  }
+
   return (
-    <section id="boundary-explorer" className="explorer">
+    <section id="boundary-explorer" className="explorer" aria-busy={busy}>
       <div className="explorer__head">
         <h2 className="explorer__title">Boundary Data Explorer</h2>
         {source ? (
@@ -160,7 +192,7 @@ export function BoundaryExplorer({ status }: Props) {
             className={
               tool === item.id ? 'explorer__tab explorer__tab--active' : 'explorer__tab'
             }
-            onClick={() => setTool(item.id)}
+            onClick={() => onSelectTool(item.id)}
           >
             {item.label}
           </button>
@@ -203,15 +235,12 @@ export function BoundaryExplorer({ status }: Props) {
       ) : null}
 
       {error ? <p className="explorer__error">{error}</p> : null}
-      {busy && tool !== 'fuzz' ? (
-        <p className="explorer__muted">Loading…</p>
-      ) : null}
 
       <div className="explorer__actions">
         <button
           type="button"
           className="explorer__copy"
-          disabled={!jsonText}
+          disabled={!jsonText || busy}
           onClick={() => void copy('json')}
         >
           {copied === 'json' ? 'Copied JSON!' : 'Copy JSON'}
@@ -224,6 +253,12 @@ export function BoundaryExplorer({ status }: Props) {
           {copied === 'curl' ? 'Copied cURL!' : 'Copy cURL'}
         </button>
       </div>
+
+      {busy && tool !== 'fuzz' && !jsonText ? (
+        <p className="explorer__muted explorer__status" aria-live="polite">
+          Loading…
+        </p>
+      ) : null}
 
       {jsonText ? (
         <pre className="explorer__preview">{jsonText}</pre>

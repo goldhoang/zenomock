@@ -94,9 +94,15 @@ Storage: process memory only. Design: [`../features/schema/schema-design.md`](..
 
 ---
 
-## Chaos — **Planned (Phase 4)**
+## Chaos — **Done (Phase 4)**
 
-### `POST /api/v1/chaos/config`
+| Method | Path | Notes |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/chaos/config` | Read current knobs |
+| `POST` | `/api/v1/chaos/config` | Update knobs for this process |
+| `POST` | `/api/v1/chaos/reset` | Reset all to `0` |
+
+### Config body
 
 ```json
 {
@@ -106,7 +112,14 @@ Storage: process memory only. Design: [`../features/schema/schema-design.md`](..
 }
 ```
 
-Middleware applies to `/api/*` only (exclude `/health` and static files).
+| Field | Range |
+| :--- | :--- |
+| `latencyMs` | 0–30000 |
+| `error500Rate` | 0–1 |
+| `corruptedJsonRate` | 0–1 |
+
+Middleware applies to `/api/*` only (exclude `/health`, static files, and `/api/v1/chaos/*`).  
+Design: [`../features/chaos/chaos-design.md`](../features/chaos/chaos-design.md).
 
 ### Chaos proxy — **Planned (Phase 5, optional)**
 
