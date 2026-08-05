@@ -26,14 +26,39 @@ Liveness probe for Tri-Mode detection. Must not be affected by chaos middleware 
 
 ---
 
-## Boundary — **Planned (Phase 2)**
+## Boundary — **Done (Phase 2)**
 
 | Method | Path | Notes |
 | :--- | :--- | :--- |
-| `GET` | `/api/v1/boundary/strings/zalgo` | UI-breaking combining marks |
-| `GET` | `/api/v1/boundary/strings/xss-payloads` | Sample XSS/SQLi strings |
-| `GET` | `/api/v1/boundary/strings/overflow?length=10000` | Long string for layout stress |
-| `POST` | `/api/v1/boundary/fuzz-json` | Body = sample JSON; returns mutated shape/types |
+| `GET` | `/api/v1/boundary/strings/zalgo?count=5` | Combining-mark samples (`count` 1–20, default 5) |
+| `GET` | `/api/v1/boundary/strings/xss-payloads` | Curated XSS / SQLi strings |
+| `GET` | `/api/v1/boundary/strings/overflow?length=10000` | Long string (`length` 1–100000, default 10000) |
+| `POST` | `/api/v1/boundary/fuzz-json` | Body = sample JSON; returns `original`, `fuzzed`, `mutations` |
+
+### Example — Zalgo `200`
+
+```json
+{
+  "endpoint": "GET /api/v1/boundary/strings/zalgo",
+  "count": 2,
+  "samples": ["Z̷a̸l̵g̶o̸ …"]
+}
+```
+
+### Example — Fuzz JSON `200`
+
+```json
+{
+  "endpoint": "POST /api/v1/boundary/fuzz-json",
+  "original": { "id": 1, "name": "alice" },
+  "fuzzed": { "name": true },
+  "mutations": ["removed:id", "typeMismatch:name"]
+}
+```
+
+Invalid JSON body → `400` `{ "error": "…" }`.
+
+Design notes: [`../features/boundary/boundary-design.md`](../features/boundary/boundary-design.md).
 
 ---
 
@@ -84,4 +109,4 @@ When the engine is offline (or a live route is not implemented yet), `getJson` r
 | `/api/v1/schemas` | `mock/schema/catalog.json` |
 | `/api/v1/chaos/config` | `mock/chaos/config.json` |
 
-On GitHub Pages these resolve under `/zenomock/mock/…`. Payloads are **previews** until the matching phase ships a live generator.
+On GitHub Pages these resolve under `/zenomock/mock/…`. Boundary GET routes are **live** on the engine; static files remain Showroom fallback. Fuzz POST falls back to a client-side mutator when the engine is offline.

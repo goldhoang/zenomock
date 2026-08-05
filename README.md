@@ -78,7 +78,7 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phase 1 — Mode glue:** Tri-Mode detection (Full Offline / Showroom / Hybrid), static Showroom catalog, smoke matrix in [`docs/deploy/tri-mode-smoke.md`](./docs/deploy/tri-mode-smoke.md). Next: **Phase 2 Boundary**.
+**Phase 2 — Boundary:** live generators + Explorer (copy JSON / cURL). Next: **Phase 3 Schema CRUD**.
 
 ---
 

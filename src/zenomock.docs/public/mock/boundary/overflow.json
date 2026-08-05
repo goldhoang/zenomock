@@ -1,7 +1,6 @@
 {
-  "source": "showroom-static",
-  "endpoint": "GET /api/v1/boundary/strings/overflow?length=10000",
-  "note": "Preview only — live generator ships in Phase 2",
+  "endpoint": "GET /api/v1/boundary/strings/overflow",
   "length": 256,
+  "note": "Showroom static sample — engine honors ?length= (1..100000)",
   "sample": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 }

@@ -1,0 +1,38 @@
+### Health
+GET http://localhost:8080/health
+Accept: application/json
+
+###
+
+### Boundary — Zalgo
+GET http://localhost:8080/api/v1/boundary/strings/zalgo?count=3
+Accept: application/json
+
+###
+
+### Boundary — XSS payloads
+GET http://localhost:8080/api/v1/boundary/strings/xss-payloads
+Accept: application/json
+
+###
+
+### Boundary — Overflow
+GET http://localhost:8080/api/v1/boundary/strings/overflow?length=128
+Accept: application/json
+
+###
+
+### Boundary — Fuzz JSON
+POST http://localhost:8080/api/v1/boundary/fuzz-json
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 1,
+  "name": "alice",
+  "active": true,
+  "tags": ["qa", "mock"],
+  "profile": { "age": 30, "city": "HN" }
+}
+
+###
