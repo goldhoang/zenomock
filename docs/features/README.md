@@ -6,7 +6,7 @@ Per-module design docs are added when implementation starts. Follow phase order 
 | :--- | :--- | :--- |
 | [`boundary/`](./boundary/) | 2 | Edge-case / nightmare string generators |
 | [`schema/`](./schema/) | 3 | Dynamic schema + in-memory mock CRUD |
-| `chaos/` | 4–5 | Failure injection; optional allowlisted proxy |
+| [`chaos/`](./chaos/) | 4–5 | Failure injection; optional allowlisted proxy (Phase 5) |
 
 Until a folder exists, treat [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md) as the contract stub.
 

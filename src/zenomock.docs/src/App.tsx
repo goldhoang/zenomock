@@ -1,4 +1,5 @@
 import { BoundaryExplorer } from './components/BoundaryExplorer'
+import { ChaosControlPanel } from './components/ChaosControlPanel'
 import { DockerCopyCommand } from './components/DockerCopyCommand'
 import { EnvironmentBanner } from './components/EnvironmentBanner'
 import { ModeCatalog } from './components/ModeCatalog'
@@ -66,6 +67,10 @@ function App() {
         <SchemaPlayground status={status} />
       </div>
 
+      <div className="reveal reveal--delay-4">
+        <ChaosControlPanel status={status} />
+      </div>
+
       <section className="panels reveal reveal--delay-4" aria-label="Roadmap modules">
         <PanelPlaceholder
           phase="Phase 2"
@@ -83,7 +88,8 @@ function App() {
         />
         <PanelPlaceholder
           phase="Phase 4"
-          status="coming-soon"
+          status="ready"
+          href="#chaos-control"
           title="Chaos Control Panel"
           description="Latency, 5xx rates, and corrupted JSON injection against /api/* — not /health."
         />

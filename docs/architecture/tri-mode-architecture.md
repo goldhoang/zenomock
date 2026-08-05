@@ -49,8 +49,9 @@ zenomock/
   - `AddZenoMockOpenApi`
   - `UseZenoMockStaticFiles` / `MapZenoMockSpaFallback`
   - `MapHealthEndpoints`
-- Mapped modules today: `MapHealthEndpoints`, `MapBoundaryEndpoints`, `MapSchemaEndpoints`.
-- Later: `MapChaosEndpoints`.
+- Mapped modules today: `MapHealthEndpoints`, `MapBoundaryEndpoints`, `MapSchemaEndpoints`, `MapChaosEndpoints`.
+- Chaos middleware (`UseZenoMockChaos`) wraps `/api/*` except `/api/v1/chaos/*`.
+- Optional later: chaos reverse-proxy (Phase 5).
 
 ## Frontend composition rules
 

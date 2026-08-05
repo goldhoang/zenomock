@@ -63,7 +63,7 @@ After Phases 0–3 (minimum viable product):
 - **Playground card:** 1st — *Boundary Data Explorer* (`ready`)
 - Design: [`../features/boundary/boundary-design.md`](../features/boundary/boundary-design.md)
 
-### Phase 3 — Schema CRUD (happy path) *(this branch)*
+### Phase 3 — Schema CRUD (happy path) *(done)*
 
 - `GET|POST /api/v1/schemas`
 - `GET|POST /api/v1/mock/{entity}`, `GET /api/v1/mock/{entity}/{id}`
@@ -73,13 +73,15 @@ After Phases 0–3 (minimum viable product):
 - **Playground card:** 2nd — *Schema & API Playground* (`ready`)
 - Design: [`../features/schema/schema-design.md`](../features/schema/schema-design.md)
 
-### Phase 4 — Chaos (local API only)
+### Phase 4 — Chaos (local API only) *(done)*
 
-- `POST /api/v1/chaos/config` (`latencyMs`, `error500Rate`, `corruptedJsonRate`)
-- Middleware applies chaos to `/api/*` (not static files, not `/health`)
-- Chaos Control Panel sliders
+- `GET|POST /api/v1/chaos/config` (`latencyMs`, `error500Rate`, `corruptedJsonRate`)
+- `POST /api/v1/chaos/reset`
+- Middleware applies chaos to `/api/*` (not static files, not `/health`, not `/api/v1/chaos/*`)
+- Chaos Control Panel sliders + probe
 - **DoD:** Configurable failure injection visible from UI and curl
-- **Playground card:** 3rd — *Chaos Control Panel*
+- **Playground card:** 3rd — *Chaos Control Panel* (`ready`)
+- Design: [`../features/chaos/chaos-design.md`](../features/chaos/chaos-design.md)
 
 ### Phase 5 — Chaos proxy *(optional / advanced)*
 

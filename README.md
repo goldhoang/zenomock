@@ -78,7 +78,7 @@ Start here: [`docs/README.md`](./docs/README.md)
 
 ## 🧭 Current status
 
-**Phase 3 — Schema CRUD:** in-memory schema registry + mock list/create/get + Playground. UI polish (Syne/DM Sans, motion). Next: **Phase 4 Chaos**.
+**Phase 4 — Chaos:** latency / 500 / corrupt JSON on `/api/*` + Control Panel. Optional next: **Phase 5 chaos proxy** (allowlist only).
 
 ---
 
