@@ -63,7 +63,7 @@ public static class ProxyEndpoints
                             }, CancellationToken.None);
                         }
                     }
-                    catch (HttpRequestException ex)
+                    catch (HttpRequestException)
                     {
                         if (!context.Response.HasStarted)
                         {
@@ -71,7 +71,7 @@ public static class ProxyEndpoints
                             await context.Response.WriteAsJsonAsync(new
                             {
                                 error = "proxy-upstream-error",
-                                message = ex.Message
+                                message = "Upstream request failed."
                             }, cancellationToken);
                         }
                     }

@@ -78,7 +78,6 @@ public sealed class ChaosMiddleware(RequestDelegate next)
 
     private static bool ShouldApply(string path)
     {
-        // Local API surface.
         if (path.StartsWith("/api/", StringComparison.OrdinalIgnoreCase))
         {
             // Keep chaos + proxy config reachable.
@@ -91,13 +90,7 @@ public sealed class ChaosMiddleware(RequestDelegate next)
             return true;
         }
 
-        // Allowlisted upstream forwards (Phase 5).
-        if (path.StartsWith("/proxy", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return false;
+        return path.StartsWith("/proxy", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsJsonContentType(string? contentType) =>
@@ -113,10 +106,10 @@ public sealed class ChaosMiddleware(RequestDelegate next)
 
         return Random.Shared.Next(0, 4) switch
         {
-            0 => payload.TrimEnd().TrimEnd('}') + ",\"chaos\":true", // missing closing brace
-            1 => payload.Replace("\"", "'", StringComparison.Ordinal), // invalid quotes
-            2 => payload[..Math.Max(1, payload.Length / 2)], // truncated
-            _ => "{\"chaos\":true,\"corrupted\":true" // truncated object
+            0 => payload.TrimEnd().TrimEnd('}') + ",\"chaos\":true",
+            1 => payload.Replace("\"", "'", StringComparison.Ordinal),
+            2 => payload[..Math.Max(1, payload.Length / 2)],
+            _ => "{\"chaos\":true,\"corrupted\":true"
         };
     }
 }

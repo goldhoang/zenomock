@@ -119,6 +119,7 @@ Storage: process memory only. Design: [`../features/schema/schema-design.md`](..
 | `corruptedJsonRate` | 0–1 |
 
 Middleware applies to `/api/*` and `/proxy/*` (exclude `/health`, static files, `/api/v1/chaos/*`, `/api/v1/proxy/*`).  
+Unauthenticated by design for local demos — see [`../../SECURITY.md`](../../SECURITY.md).  
 Design: [`../features/chaos/chaos-design.md`](../features/chaos/chaos-design.md).
 
 ---

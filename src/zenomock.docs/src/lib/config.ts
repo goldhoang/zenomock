@@ -3,6 +3,8 @@ export const LOCAL_API_URL =
   'http://localhost:8080'
 
 export const HEALTH_POLL_MS = 5000
+/** Slower probe on GitHub Pages Showroom to cut localhost noise. */
+export const HEALTH_POLL_SHOWROOM_MS = 20_000
 export const HEALTH_PROBE_TIMEOUT_MS = 1500
 
 export type EngineMode = 'checking' | 'offline' | 'hybrid' | 'showroom'

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getJson, postJson, type DataSource, type EngineStatus } from '../lib/api'
 import { LOCAL_API_URL } from '../lib/config'
 import { fuzzJsonClientSide } from '../lib/fuzzJson'
+import { CodeBlock } from './CodeBlock'
 
 type ToolId = 'zalgo' | 'xss' | 'overflow' | 'fuzz'
 
@@ -47,7 +48,7 @@ export function BoundaryExplorer({ status }: Props) {
 
   useEffect(() => {
     const id = window.setTimeout(() => {
-      setDebouncedOverflow(Math.min(Math.max(overflowLength, 1), 100000))
+      setDebouncedOverflow(Math.min(Math.max(overflowLength, 1), 16_000))
     }, OVERFLOW_DEBOUNCE_MS)
     return () => window.clearTimeout(id)
   }, [overflowLength])
@@ -61,7 +62,6 @@ export function BoundaryExplorer({ status }: Props) {
       return
     }
 
-    // Only routing fields — do not re-fetch on health poll ticks.
     const snapshot: EngineStatus = {
       mode,
       apiBaseUrl,
@@ -74,7 +74,6 @@ export function BoundaryExplorer({ status }: Props) {
         ? `${active.path}?length=${debouncedOverflow}`
         : active.path
 
-    // Avoid inserting a "Loading…" row that shoves the preview down on every fetch.
     const showBlockingSpinner = !hasPayloadRef.current
     if (showBlockingSpinner) {
       setBusy(true)
@@ -139,7 +138,7 @@ export function BoundaryExplorer({ status }: Props) {
     }
     const path =
       tool === 'overflow'
-        ? `${active.path}?length=${Math.min(Math.max(overflowLength, 1), 100000)}`
+        ? `${active.path}?length=${Math.min(Math.max(overflowLength, 1), 16_000)}`
         : active.path
     return `curl -s "${curlBase}${path}"`
   })()
@@ -170,7 +169,7 @@ export function BoundaryExplorer({ status }: Props) {
   }
 
   return (
-    <section id="boundary-explorer" className="explorer" aria-busy={busy}>
+    <section id="boundary-explorer" className="explorer section-anchor" aria-busy={busy}>
       <div className="explorer__head">
         <h2 className="explorer__title">Boundary Data Explorer</h2>
         {source ? (
@@ -205,10 +204,13 @@ export function BoundaryExplorer({ status }: Props) {
           <input
             type="number"
             min={1}
-            max={100000}
+            max={16000}
             value={overflowLength}
             onChange={(e) => setOverflowLength(Number(e.target.value) || 1)}
           />
+          <span className="explorer__muted" style={{ margin: 0 }}>
+            UI caps at 16k (preview truncates further)
+          </span>
         </label>
       ) : null}
 
@@ -261,7 +263,7 @@ export function BoundaryExplorer({ status }: Props) {
       ) : null}
 
       {jsonText ? (
-        <pre className="explorer__preview">{jsonText}</pre>
+        <CodeBlock code={jsonText} />
       ) : tool === 'fuzz' ? (
         <p className="explorer__muted">Paste JSON and run fuzz to preview mutations.</p>
       ) : null}

@@ -1,22 +1,27 @@
 # Hướng dẫn sử dụng ZenoMock (end-to-end)
 
-Tài liệu này giải thích **cách dùng thực tế** toàn bộ chức năng hiện có (Phases 0–4) và **kế hoạch Phase 5 (chaos proxy)**.  
-Contract HTTP chi tiết: [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md). Thiết kế từng module: [`../features/`](../features/).
+Tài liệu thao tác playground + kịch bản tester cho **Phases 0–5** (đã ship).  
+Dự án của **[GoldHoang](https://goldhoang.dev)** — playground: https://goldhoang.github.io/zenomock/
+
+- Contract HTTP: [`../api/API_SPECIFICATION.md`](../api/API_SPECIFICATION.md)
+- Thiết kế module: [`../features/`](../features/)
+- **Chaos & Proxy (lý thuyết sâu, hay nhầm):** [`chaos-and-proxy-deep-dive.md`](./chaos-and-proxy-deep-dive.md)
 
 ---
 
 ## 1. ZenoMock là gì (trong 1 phút)
 
-ZenoMock là **mock engine local-first** + playground UI:
+ZenoMock là **mock engine local-first** + playground UI do GoldHoang thiết kế để học Tri-Mode, boundary testing, mock CRUD và chaos — chạy $0 trên GHCR + GitHub Pages.
 
 | Bạn cần | ZenoMock giúp |
 | :--- | :--- |
 | FE chưa có BE / BE chậm | Tạo CRUD mock theo JSON Schema (in-memory) |
 | Test form / encoding / XSS | Sinh chuỗi boundary (Zalgo, XSS, overflow, fuzz JSON) |
-| Test loading / lỗi / body hỏng | Inject latency, HTTP 500, corrupted JSON trên `/api/*` |
+| Test loading / lỗi / body hỏng | Inject latency, HTTP 500, corrupted JSON |
+| Test lỗi trên API gần thật | Allowlisted `/proxy` + chaos |
 | Demo $0 trên GitHub Pages | Showroom tĩnh khi engine offline |
 
-**Không phải:** database thật, auth, Postman thay thế toàn phần, hay reverse-proxy mở (Phase 5 mới có proxy **có allowlist**).
+**Không phải:** database thật, auth multi-tenant, Postman thay thế toàn phần, hay reverse-proxy mở (không allowlist).
 
 ### Tri-Mode (cách mở app)
 
@@ -212,9 +217,13 @@ Collection: `tests/http/chaos.http`. Design nội bộ: [`../features/chaos/chao
 
 ## 5. Phase 5 — Chaos proxy (đã ship)
 
+> Đọc kỹ lý thuyết + SSRF + env production: [`chaos-and-proxy-deep-dive.md`](./chaos-and-proxy-deep-dive.md) (Phần B).
+
 ### Mục đích
 
 Forward request qua ZenoMock tới **một upstream đã cấu hình** (`Proxy:UpstreamBaseUrl`), chỉ khi **host nằm trong allowlist**. Chaos Phase 4 cũng áp lên `/proxy/*` → test client với payload “gần thật” + lỗi giả.
+
+**Production / Docker:** không cần “mở file trong container”. Override bằng biến môi trường `Proxy__UpstreamBaseUrl`, `Proxy__AllowedHosts__0`, … (file `appsettings.json` vẫn nằm trong image với default `httpbin.org`).
 
 ```text
 Client → GET http://localhost:8080/proxy/api/v1/boundary/strings/xss-payloads

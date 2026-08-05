@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
-import { HEALTH_POLL_MS, LOCAL_API_URL, resolveEngineStatus, type EngineStatus } from './api'
+import {
+  HEALTH_POLL_MS,
+  HEALTH_POLL_SHOWROOM_MS,
+  LOCAL_API_URL,
+  resolveEngineStatus,
+  type EngineStatus,
+} from './api'
 
 const initialStatus: EngineStatus = {
   mode: 'checking',
@@ -13,6 +19,13 @@ export function useEngineStatus(): EngineStatus {
 
   useEffect(() => {
     const controller = new AbortController()
+    let intervalId = 0
+
+    const schedule = (mode: EngineStatus['mode']) => {
+      window.clearInterval(intervalId)
+      const ms = mode === 'showroom' ? HEALTH_POLL_SHOWROOM_MS : HEALTH_POLL_MS
+      intervalId = window.setInterval(() => void tick(), ms)
+    }
 
     const tick = async () => {
       const next = await resolveEngineStatus(controller.signal)
@@ -30,13 +43,13 @@ export function useEngineStatus(): EngineStatus {
         }
         return next
       })
+      schedule(next.mode)
     }
 
     void tick()
-    const id = window.setInterval(() => void tick(), HEALTH_POLL_MS)
     return () => {
       controller.abort()
-      window.clearInterval(id)
+      window.clearInterval(intervalId)
     }
   }, [])
 

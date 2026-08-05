@@ -20,16 +20,14 @@ Mục tiêu: hướng dẫn **polish → harden → mở rộng** mà không ph�
 
 ---
 
-## 2. Wave A — Polish UI/UX & chất lượng (ưu tiên tiếp)
+## 2. Wave A — Polish UI/UX & chất lượng *(done — `chore/ui-ux-polish`)*
 
-Nhánh đề xuất: **`chore/ui-ux-polish`**
-
-- Thống nhất spacing / typography / motion (hero, panels, toasts)
-- A11y: focus ring, `aria-*`, giảm layout shift
-- Empty / error / unsaved states nhất quán giữa Boundary · Schema · Chaos · Proxy
-- Copy UX: cURL/JSON, tip ngắn hơn, deep-link hash ổn định
-- Light pass trên README + playground footer
-- Không thêm dependency UI kit trừ khi chủ đích (Tailwind chỉ khi cài thật)
+- Sticky section nav + smooth scroll / hash deep-links
+- JSON syntax highlighting (`highlight.js`) trên preview blocks
+- Footer & hero branding **GoldHoang** (`goldhoang.dev` / GitHub Pages)
+- Focus-visible, scroll-margin, panel grid 2×2 / 4-col, toast/state consistency
+- Docs: chaos & proxy deep-dive + guide/README polish
+- Comment cleanup (giữ comment bảo mật / ordering / UX)
 
 **DoD Wave A:** playground “demo-ready” 5 phút không cần đọc code.
 
@@ -73,8 +71,8 @@ Mỗi mục = PR riêng, cập nhật `/docs/api` + guide.
 ## 6. Thứ tự gợi ý
 
 ```text
-1) chore/ui-ux-polish     ← kết thúc vòng phát triển hiện tại
-2) test/hardening-ci
+1) chore/ui-ux-polish     ← done
+2) test/hardening-ci      ← Wave B tiếp theo
 3) (optional) feat/* từ Wave C theo nhu cầu học
 ```
 

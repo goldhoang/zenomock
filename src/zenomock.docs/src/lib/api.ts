@@ -1,5 +1,6 @@
 import {
   HEALTH_POLL_MS,
+  HEALTH_POLL_SHOWROOM_MS,
   HEALTH_PROBE_TIMEOUT_MS,
   LOCAL_API_URL,
   type DataSource,
@@ -9,7 +10,7 @@ import {
 import { resolveStaticMockUrl } from './mockRoutes'
 
 export type { DataSource, EngineStatus, HealthPayload }
-export { HEALTH_POLL_MS, LOCAL_API_URL }
+export { HEALTH_POLL_MS, HEALTH_POLL_SHOWROOM_MS, LOCAL_API_URL }
 
 export type ApiResult<T> = {
   data: T
@@ -226,10 +227,7 @@ async function fetchStaticJson<T>(path: string, signal?: AbortSignal): Promise<T
   }
 }
 
-/**
- * GET JSON: engine first when reachable, then Showroom static fallback.
- * Future feature panels should call this instead of raw `fetch`.
- */
+/** GET JSON: engine first when reachable, then Showroom static fallback. */
 export async function getJson<T>(
   path: string,
   options?: { signal?: AbortSignal; status?: EngineStatus },

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getJson, type DataSource, type EngineStatus } from '../lib/api'
 import type { CatalogRoute, MockCatalog } from '../lib/catalog'
+import { CodeBlock } from './CodeBlock'
 
 type Props = {
   status: EngineStatus
@@ -74,7 +75,7 @@ export function ModeCatalog({ status }: Props) {
   }
 
   return (
-    <section className="catalog" aria-label="Mode glue catalog">
+    <section id="mode-catalog" className="catalog section-anchor" aria-label="Mode glue catalog">
       <div className="catalog__head">
         <h2 className="catalog__title">Showroom catalog</h2>
         {catalogSource ? (
@@ -102,12 +103,10 @@ export function ModeCatalog({ status }: Props) {
         ))}
       </ul>
       {preview ? (
-        <pre className="catalog__preview">
-          <span className="catalog__preview-meta">
-            {preview.path} · {preview.source}
-          </span>
-          {JSON.stringify(preview.body, null, 2)}
-        </pre>
+        <CodeBlock
+          code={JSON.stringify(preview.body, null, 2)}
+          meta={`${preview.path} · ${preview.source}`}
+        />
       ) : null}
     </section>
   )

@@ -47,9 +47,8 @@ public sealed class ProxyForwarder(
 
         if (HasBody(context.Request.Method))
         {
-            await using var limited = new MemoryStream();
-            await context.Request.Body.CopyToAsync(limited, cancellationToken);
-            if (limited.Length > _options.MaxRequestBodyBytes)
+            if (context.Request.ContentLength is > 0
+                && context.Request.ContentLength > _options.MaxRequestBodyBytes)
             {
                 context.Response.StatusCode = StatusCodes.Status413PayloadTooLarge;
                 await context.Response.WriteAsJsonAsync(new
@@ -58,6 +57,32 @@ public sealed class ProxyForwarder(
                     maxRequestBodyBytes = _options.MaxRequestBodyBytes
                 }, cancellationToken);
                 return;
+            }
+
+            await using var limited = new MemoryStream();
+            var chunk = new byte[8192];
+            long total = 0;
+            while (true)
+            {
+                var read = await context.Request.Body.ReadAsync(chunk.AsMemory(0, chunk.Length), cancellationToken);
+                if (read == 0)
+                {
+                    break;
+                }
+
+                total += read;
+                if (total > _options.MaxRequestBodyBytes)
+                {
+                    context.Response.StatusCode = StatusCodes.Status413PayloadTooLarge;
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        error = "request-body-too-large",
+                        maxRequestBodyBytes = _options.MaxRequestBodyBytes
+                    }, cancellationToken);
+                    return;
+                }
+
+                await limited.WriteAsync(chunk.AsMemory(0, read), cancellationToken);
             }
 
             var bytes = limited.ToArray();

@@ -1,3 +1,4 @@
+import { BackToTop } from './components/BackToTop'
 import { BoundaryExplorer } from './components/BoundaryExplorer'
 import { ChaosControlPanel } from './components/ChaosControlPanel'
 import { ChaosProxyPanel } from './components/ChaosProxyPanel'
@@ -6,6 +7,8 @@ import { EnvironmentBanner } from './components/EnvironmentBanner'
 import { ModeCatalog } from './components/ModeCatalog'
 import { PanelPlaceholder } from './components/PanelPlaceholder'
 import { SchemaPlayground } from './components/SchemaPlayground'
+import { SiteFooter } from './components/SiteFooter'
+import { StickyNav } from './components/StickyNav'
 import type { EngineMode } from './lib/config'
 import { useEngineStatus } from './lib/useEngineStatus'
 import './App.css'
@@ -27,7 +30,10 @@ function App() {
   const status = useEngineStatus()
 
   return (
-    <div className="app">
+    <div className="app" id="top">
+      <StickyNav />
+
+      <main>
       <div className="reveal">
         <EnvironmentBanner
           mode={status.mode}
@@ -39,6 +45,12 @@ function App() {
       <header className="hero reveal reveal--delay-1">
         <p className="hero__eyebrow">Local-first mock engine</p>
         <h1 className="hero__brand">ZenoMock</h1>
+        <p className="hero__byline">
+          Designed &amp; built by{' '}
+          <a href="https://goldhoang.dev" target="_blank" rel="noreferrer">
+            GoldHoang
+          </a>
+        </p>
         <p className="hero__lead">
           Containerized CRUD mocks, boundary data, and chaos — zero-cost via GHCR
           and GitHub Pages.
@@ -60,23 +72,27 @@ function App() {
         <ModeCatalog status={status} />
       </div>
 
-      <div className="reveal reveal--delay-3">
+      <div className="reveal reveal--delay-3 section-anchor">
         <BoundaryExplorer status={status} />
       </div>
 
-      <div className="reveal reveal--delay-4">
+      <div className="reveal reveal--delay-4 section-anchor">
         <SchemaPlayground status={status} />
       </div>
 
-      <div className="reveal reveal--delay-4">
+      <div className="reveal reveal--delay-4 section-anchor">
         <ChaosControlPanel status={status} />
       </div>
 
-      <div className="reveal reveal--delay-4">
+      <div className="reveal reveal--delay-4 section-anchor">
         <ChaosProxyPanel status={status} />
       </div>
 
-      <section className="panels reveal reveal--delay-4" aria-label="Roadmap modules">
+      <section
+        className="panels reveal reveal--delay-4 section-anchor"
+        id="modules"
+        aria-label="Roadmap modules"
+      >
         <PanelPlaceholder
           phase="Phase 2"
           status="ready"
@@ -106,11 +122,10 @@ function App() {
           description="Allowlisted /proxy forward with SSRF guards; chaos knobs apply to proxied calls."
         />
       </section>
+      </main>
 
-      <footer className="footer">
-        <span>Mode: {modeLabel(status.mode)}</span>
-        <a href="https://goldhoang.github.io/zenomock/">Playground</a>
-      </footer>
+      <SiteFooter modeLabel={modeLabel(status.mode)} />
+      <BackToTop />
     </div>
   )
 }
